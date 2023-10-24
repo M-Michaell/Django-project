@@ -29,7 +29,7 @@ class Campaign(models.Model):
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
     tags = models.ManyToManyField(Tag, blank=True)
-    # when maged add user i will add relation between project and user
+    user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="Campaign")
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -80,3 +80,23 @@ class Rate(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="rate")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Image(models.Model):
+    image = models.ImageField(upload_to='project/images/', null=True, blank=True )
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
+
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=400, null=True)
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="reply")
+
+class Reply(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    reply = models.CharField(max_length=100)
+    comment = models.ForeignKey(Comment ,on_delete=models.CASCADE , related_name="reply")
+
+    
