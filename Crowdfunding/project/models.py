@@ -30,13 +30,4 @@ class Campaign(models.Model):
         return f'{self.title}'
 
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='project/images/', null=True, blank=True )
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
 
-
-class Comment(models.Model):
-    comment = models.CharField(max_length=400, null=True)
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
-    ##relation to user many to one
-    created_at = models.DateTimeField(auto_now_add=True)
