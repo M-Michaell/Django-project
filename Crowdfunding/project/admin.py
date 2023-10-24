@@ -5,4 +5,6 @@ from . import models
 admin.site.register(models.Category)
 admin.site.register(models.Campaign)
 admin.site.register(models.Tag)
+admin.site.register(models.Image)
+admin.site.register(models.Comment)
 
