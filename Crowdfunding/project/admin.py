@@ -7,4 +7,6 @@ admin.site.register(models.Campaign)
 admin.site.register(models.Donation)
 admin.site.register(models.Rate)
 admin.site.register(models.Report)
+admin.site.register(models.Reply)
+
 

@@ -80,3 +80,11 @@ class Rate(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="rate")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Reply(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    reply = models.CharField(max_length=100)
+    # comment = models.ForeignKey()
+    # user = models.ForeignKey()
+
