@@ -29,7 +29,7 @@ class Campaign(models.Model):
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
     tags = models.ManyToManyField(Tag, blank=True)
-    user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="Campaign")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="campaign")
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -91,12 +91,11 @@ class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="reply")
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
+    
 class Reply(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     reply = models.CharField(max_length=100)
-    comment = models.ForeignKey(Comment ,on_delete=models.CASCADE , related_name="reply")
-
-    
+    comment = models.ForeignKey(Comment,on_delete=models.CASCADE,related_name="reply")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reply")
