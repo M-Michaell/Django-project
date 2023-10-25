@@ -8,3 +8,6 @@ from django.shortcuts import render
 #     model = Campaign
 #     template_name = 'project/create.html'
 #     form_class = CreateModelForm
+
+def test(request):
+    return render(request, 'project/create.html')
