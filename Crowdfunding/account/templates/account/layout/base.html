@@ -7,7 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'account/css/edit.css' %}">
 
 
 </head>
@@ -20,7 +21,8 @@
         </div>
         <div>
             {% if user.username%}
-                {{user.username}}
+
+                <a href="{% url 'account.edit' %}">{{user.username}}</a>
                 <a href="{% url 'account.logout' %}">logout</a>
             {% else %}
                 <a href="{% url 'account.login' %}">login</a>
@@ -47,6 +49,9 @@
 
     <script src="{% static 'bootstrap/js/all.min.js' %}">
     </script>
+    <script src="{% static 'account/js/edit.js' %}">
+    </script>
+    
 </body>
 
 </html>
