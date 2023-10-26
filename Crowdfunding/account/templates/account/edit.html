@@ -4,87 +4,102 @@
 
 {% block content %}
 
-<div class="container" style="margin: 100px;">
-    <h2>Register</h2>
-    <form method="post" class="m-5">
-        {% csrf_token %}
-
-        {% if form.errors %}
-            <div class="alert alert-danger" role="alert">
-                {% for field, errors in form.errors.items %}
-                    <strong>{{ field|title }}:</strong>
-                    <ul>
-                        {% for error in errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endfor %}
+<div class="d-flex flex-row">
+    <div class="container" style="margin: 100px;">
+        <h2>Edit Profile</h2>
+        <form method="post" class="m-5" enctype="multipart/form-data">
+            {% csrf_token %}
+    
+    
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for field, errors in form.errors.items %}
+                        <strong>{{ field|title }}:</strong>
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </div>
+            {% endif %}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_username">Email :</label>
+                <div class="col-2">                
+                {{ user.email }}
+                </div>
             </div>
-        {% endif %}
-
-        
-        <div class="row p-3">
-            <label class="col-2" for="id_username">Visible Name :</label>
-            <div class="col-2">                
-            {{ form.username }}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_username">Visible Name :</label>
+                <div class="col-2">                
+                {{ form.username }}
+                </div>
             </div>
-        </div>
-
-        <div class="row p-3">
-            <label class="col-2" for="id_last_name">Email:</label>
-            <div class="col-2">                
-                {{ form.email }}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_first_name">First Name:</label>
+                <div class="col-2">                
+                    {{ form.first_name }}
+                </div>
             </div>
-        </div>
-
-        <div class="row p-3">
-            <label class="col-2" for="id_last_name">Mobile Number:</label>
-            <div class="col-2">                
-                {{ form.phone }}
+    
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_last_name">Last Name:</label>
+                <div class="col-2">                
+                    {{ form.last_name }}
+                </div>
             </div>
-        </div>
-
-        <div class="row p-3">
-            <label class="col-2" for="id_first_name">First Name:</label>
-            <div class="col-2">                
-                {{ form.first_name }}
+    
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_last_name">Mobile Number:</label>
+                <div class="col-2">                
+                    {{ form.phone }}
+                </div>
             </div>
-        </div>
-
-
-        <div class="row p-3">
-            <label class="col-2" for="id_last_name">Last Name:</label>
-            <div class="col-2">                
-                {{ form.last_name }}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_last_name">Personal Picture:</label>
+                <div class="col-2">                
+                    {{ form.image }}
+                </div>
             </div>
-        </div>
-
-        <div class="row p-3">
-            <label class="col-2" for="id_last_name">Birth Day:</label>
-            <div class="col-2">                
-                {{ form.birthDate }}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_last_name">Birth Day:</label>
+                <div class="col-2">                
+                    {{ form.birthDate }}
+                </div>
             </div>
-        </div>
-
-        <div class="row p-3">
-            <label class="col-2" for="id_last_name">FaceBook:</label>
-            <div class="col-2">                
-                {{ form.facebookProfile }}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_last_name">FaceBook:</label>
+                <div class="col-2">                
+                    {{ form.facebookProfile }}
+                </div>
             </div>
-        </div>
-
-        <div class="row p-3">
-            <label class="col-2" for="id_last_name">Country:</label>
-            <div class="col-2">                
-                {{ form.country }}
+    
+            <div class="row p-3">
+                <label class="col-2" for="id_last_name">Country:</label>
+                <div class="col-2">                
+                    {{ form.country }}
+                </div>
             </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary m-3 ">Update</button>
-    </form>
-
-
-
+    
+            <button type="submit" class="btn btn-primary m-3 ">Update</button>
+        </form>
+    
+    {{user.image}}
+    
+    </div>
+    {% if user.image %}
+    <div>
+        <img src="{{user.get_image_url}}" alt="" height="200" width="200" style="margin: 100px;">
+    </div>
+    {% endif %}
 </div>
 
 

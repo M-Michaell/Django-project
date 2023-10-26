@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 from django.contrib.auth.models import AbstractUser
 
@@ -12,8 +11,12 @@ class CustomUser(AbstractUser):
     birthDate = models.DateField(null=True,blank=True)
     facebookProfile = models.URLField(null=True,blank=True)
     country = models.CharField(max_length=30,null=True,blank=True)
+    image = models.ImageField(upload_to='account/images',null=True,blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
+    @property
+    def get_image_url(self):
+        return f"/media/{self.image}"
