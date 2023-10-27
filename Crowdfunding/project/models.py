@@ -1,15 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator,MaxValueValidator
 
 
 # Create your models here.
-
-
-
-
-class User(models.Model):
-    pass
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -29,11 +23,12 @@ class Campaign(models.Model):
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
     tags = models.ManyToManyField(Tag, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="campaign")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,related_name="campaign")
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # images = models.ManyToManyField('Image', blank=True, related_name="campaign_images")  # Add this line
 
     def __str__(self):
         return f'{self.title}'
@@ -84,7 +79,7 @@ class Rate(models.Model):
 
 class Image(models.Model):
     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
 
 
 class Comment(models.Model):

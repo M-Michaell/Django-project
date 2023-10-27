@@ -1,5 +1,6 @@
 from django import forms
-from project.models import Campaign, Category, Tag
+
+from project.models import Campaign, Category, Tag, Image
 
 class CreateCampaignForm(forms.ModelForm):
     class Meta:
@@ -17,3 +18,11 @@ class CreateTagForm(forms.ModelForm):
         model = Tag
         fields = '__all__'
         widgets = {}
+
+class CustomizedImageCreationForm(forms.ModelForm):
+
+    class Meta:
+        model = Image
+        
+        fields = '__all__'
+
