@@ -1,9 +1,19 @@
-# from django import forms
-# from project.models import Campaign
-#
-# class CreateModelForm(forms.ModelForm):
-#     # images = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
-#
-#     class Meta:
-#         model = Campaign
-#         fields = '__all__'
+from django import forms
+from project.models import Campaign, Category, Tag
+
+class CreateCampaignForm(forms.ModelForm):
+    class Meta:
+        model = Campaign
+        fields = '__all__'
+
+
+class CreateCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
+        widgets = {}
+class CreateTagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+        widgets = {}
