@@ -4,7 +4,7 @@ from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAcc
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.auth import login
 from django.contrib import messages
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from account.models import CustomUser
 from django.contrib.sites.shortcuts import get_current_site
 from account.tokens import account_activation_token
@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 from django.views.generic.edit import CreateView
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
+from django.utils import timezone
 
 
 def userHome(request):
@@ -32,6 +33,8 @@ class CustomRegistrationView(CreateView):
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
+        user.activation_timestamp = timezone.now() + timezone.timedelta(hours=24)
+
         user.save()
         current_site = get_current_site(self.request)
         mail_subject = 'Activate your blog account.'
@@ -49,12 +52,14 @@ class CustomRegistrationView(CreateView):
         return super().form_valid(form)
     
 def activate(request, uidb64, token):
-    # try:
-    uid = urlsafe_base64_decode(uidb64)
-    user = CustomUser.objects.get(pk=uid)
-    # except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
-        # user = None
+    try:
+        uid = urlsafe_base64_decode(uidb64)
+        user = CustomUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
     if user is not None and account_activation_token.check_token(user, token):
+        if user.activation_timestamp and timezone.now() > user.activation_timestamp:
+            return HttpResponse('Activation link has expired.')
         user.is_active = True
         user.save()
         login(request, user)
@@ -93,6 +98,12 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         return reverse_lazy('account.home')
 
+
+class CustomDeleteAccountView(DeleteView):
+    model = CustomUser
+    template_name = 'account/delete.html'  # Specify the template for the delete confirmation page
+    success_url = reverse_lazy('account.home')
+    
 
 
 

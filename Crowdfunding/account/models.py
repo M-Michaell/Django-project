@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.shortcuts import reverse
 from django.contrib.auth.models import AbstractUser
 
 
@@ -13,6 +13,9 @@ class CustomUser(AbstractUser):
     country = models.CharField(max_length=30,null=True,blank=True)
     image = models.ImageField(upload_to='account/images',null=True,blank=True)
 
+    activation_timestamp = models.DateTimeField(null=True, blank=True)
+
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -20,3 +23,9 @@ class CustomUser(AbstractUser):
     @property
     def get_image_url(self):
         return f"/media/{self.image}"
+    
+
+
+    @property
+    def get_delete_url(self):
+        return  reverse('account.delete', args=[self.id])
