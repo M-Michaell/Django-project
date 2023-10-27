@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.css'%}">
     <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.min.css'%}">
     <link rel="stylesheet" href="{% static 'project/style/base.css'%}">
+    <link rel="stylesheet" href="{% static 'project/mdb/css/mdb.min.css'%}">
     <style>
         li {
             color: red;
@@ -48,9 +49,9 @@
                                     Dropdown link
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'project.createCategory' %}">create capaign</a></li>
+                                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
                             </li>
 
@@ -108,8 +109,9 @@
     <script src="{% static 'project/bootstrap/js/bootstrap.bundle.min.js'%}"> </script>
 
     <script src="{% static 'project/js/script.js' %}">
-
+        
     </script>
+    <script src="{% static 'project/mdb/js/mdb.min.js'%}"> </script>
 </body>
 
 </html>
