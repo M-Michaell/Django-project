@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator,MaxValueValidator
 
 
@@ -7,8 +8,7 @@ from django.core.validators import MinValueValidator,MaxValueValidator
 
 
 
-class User(models.Model):
-    pass
+
 
 
 class Category(models.Model):
@@ -86,6 +86,9 @@ class Image(models.Model):
     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
 
+    def get_image_url(self):
+        return f'/media/{self.image}'
+
 
 class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
@@ -99,3 +102,19 @@ class Reply(models.Model):
     reply = models.CharField(max_length=100)
     comment = models.ForeignKey(Comment,on_delete=models.CASCADE,related_name="reply")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reply")
+
+class Comment_Report(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_report")
+    report_category=[("1","Flase Information"),
+                  ("2","Violenece"),
+                  ("3","Harassment"),
+                  ("4","spam"),
+                  ("5","Hate speech"),
+                  ("7","Terroism"),
+                  ("8","Something else")]
+    report =  models.CharField(
+        max_length=200,
+        choices=report_category,
+        default='1',
+    )
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')

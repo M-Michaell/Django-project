@@ -1,0 +1,255 @@
+{% extends 'project/layouts/base.html' %} {% load static %}
+{%block title%}details {% endblock %}
+
+
+
+{% block body %}
+
+<style>
+  svg {
+    margin-bottom: 2em;
+  }
+
+  .rating_background {
+    fill: #e8e8e8;
+    height: 100%;
+    width: 100%;
+  }
+
+  .rating_value {
+    fill: #ffb94b;
+    height: 100%;
+  }
+
+  .rating {
+    grid-area: rating;
+    width: 5rem;
+  }
+
+  .rate {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    overflow: hidden;
+    flex-direction: row-reverse;
+    height: 40px;
+    position: relative;
+  }
+
+  .rate-0 {
+    filter: grayscale(100%);
+  }
+
+  .rate>input {
+    display: none;
+  }
+
+  .rate>label {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    margin-top: auto;
+    transition: .3s;
+  }
+
+
+  .feedback {
+    margin-top: 2vh;
+    align-items: center;
+    width: 100%;
+  }
+
+  .feedback h4 {
+    margin: auto;
+    width: fit-content;
+  }
+</style>
+
+<div class="row row-cols-1 row-cols-xl-2 g-2 justify-content-between">
+
+  <!-- project details -->
+  <!-- slider -->
+  <div class="col-xl-7 ">
+    <h2 class="my-5 ">{{campaign.title}}</h2>
+
+    <div id="carouselExampleCaptions" class="carousel slide mb-2">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Slide 1"></button>
+        {% for i in images %}
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ forloop.counter }}"
+          aria-label="Slide {{ forloop.counter1 }}"></button>
+        {% endfor %}
+
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{{f_image.get_image_url}}" class="d-block w-100 rounded-3 " alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>First slide label</h5>
+            <p>Some representative placeholder content for the first slide.</p>
+          </div>
+        </div>
+        {% for image in images%}
+        <div class="carousel-item ">
+          <img src=" {{image.get_image_url}}" class="d-block w-100 rounded-3" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Second slide label</h5>
+            <p>Some representative placeholder content for the second slide.</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <!-- end slider -->
+    <!-- start details -->
+    <div>
+      <p class="fs-4 fw-bold">
+        What this campaign for:
+      </p>
+      <p class="mt-2 lh-lg fs-5">{{campaign.detail}}</p>
+
+      <div class="d-flex my-3">
+        <p>From: </p>
+        <p class="text-body-secondary mx-2"> {{campaign.start_date}}</p>
+        <p>To: </p>
+        <p class="text-body-secondary mx-2"> {{campaign.end_date}}</p>
+      </div>
+      <div class="d-flex ms-2 fs-5"> Tags:
+        {%for tag in tags%}
+        <a class="btn btn-secondary ms-2">{{tag}}</a>
+        {%endfor%}
+      </div>
+    </div>
+
+    <hr>
+    <!-- Related Campaigns: -->
+    <h3>Related Campaigns:</h3>
+    <div class="row row-cols-1 row-cols-md-2 g-4 p-3">
+      {% for camp in related_campaigns %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{camp.images.all.0.get_image_url}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ camp.title }}</h5>
+
+          </div>
+          <div class="card-footer">
+            <small class="text-body-secondary">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <!-- end Related Campaigns: -->
+
+
+
+    <hr>
+    <!-- comments -->
+    <div>
+      <h4>comments ({{ comments|length }}):</h4>
+
+      {%for comment in comments%}
+      <div class="border border-1 px-4 my-1">
+        <p class="fs-6 fw-bold my-3">user: {{comment.user}}</p>
+        <p class="ms-2 text-body-secondary ">{{comment.comment}}</p>
+        <p class="ms-2 text-body-secondary">{{comment.created_at}}</p>
+        <div class="ms-5 ps-5">
+          <a class="m-3">reply</a>
+          <a> show replies </a>
+        </div>
+      </div>
+      {%endfor%}
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+  <!-- card -->
+  <div class="col-xl-4 col-auto order-first order-xl-last mt-5 pt-5">
+    <div class="card sticky-top mt-5 shadow-lg">
+
+
+      <div class="card-body">
+        <div class="d-flex flex-lg-nowrap align-items-end">
+          <p class="fs-4 fw-bold">{{total_donation}}</p>
+          <p class="text-light-emphasis ms-1"> L.E raised of {{campaign.total_target}}</p>
+
+        </div>
+        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0"
+          aria-valuemax="100">
+          <div class="progress-bar" style="width: {{progress}}% "></div>
+        </div>
+
+
+
+        <div class="">
+          <!-- <p class="">rate:{{rating}}</p> -->
+
+          <span>
+            <svg viewBox="0 0 1000 200" class="rating m-0">
+              <defs>
+                <polygon id="star" points="100,0 131,66 200,76 150,128 162,200 100,166 38,200 50,128 0,76 69,66 " />
+                <clipPath id="stars">
+                  <use xlink:href="#star" />
+                  <use xlink:href="#star" x="20%" />
+                  <use xlink:href="#star" x="40%" />
+                  <use xlink:href="#star" x="60%" />
+                  <use xlink:href="#star" x="80%" />
+                </clipPath>
+              </defs>
+              <rect class="rating_background" clip-path="url(#stars)"></rect>
+              <rect width="{{rating}}%" class="rating_value" clip-path="url(#stars)"></rect>
+            </svg>
+          </span>
+        </div>
+        <div class="">
+          <p class="">{{donation_count}} donations</p>
+        </div>
+
+        <h5 class="card-title"></h5>
+        <a class="btn btn-dark ">Donation now</a>
+
+
+
+
+        <div>
+          <p>rate</p>
+          <a class="btn btn-dark">rate now</a>
+        </div>
+        <div>
+          <a class="text-decoration-none text-danger">report this project</a>
+        </div>
+
+        <p class="card-text">
+          This is a wider card with supporting text below as a natural lead-in
+          to additional content. This content is a little bit longer
+        </p>
+      </div>
+      <div class="card-footer">
+        <small class="text-body-secondary">Last updated 3 mins ago</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
