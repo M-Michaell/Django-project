@@ -139,7 +139,7 @@
       {% for camp in related_campaigns %}
       <div class="col">
         <div class="card h-100">
-          <img src="{{camp.images.all.0.get_image_url}}" class="card-img-top" alt="...">
+          <img src="{{camp.image.all.0.get_image_url}}" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title">{{ camp.title }}</h5>
 
@@ -227,7 +227,7 @@
         </div>
 
         <h5 class="card-title"></h5>
-        <a class="btn btn-dark ">Donation now</a>
+        <a class="btn btn-dark " href="{% url 'campaign.donation' campaign.id %}">Donation now</a>
 
 
 

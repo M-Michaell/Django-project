@@ -35,7 +35,6 @@ class Campaign(models.Model):
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # images = models.ManyToManyField('Image', blank=True, related_name="campaign_images")  # Add this line
 
     def __str__(self):
         return f'{self.title}'
@@ -87,6 +86,10 @@ class Rate(models.Model):
 class Image(models.Model):
     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
+
+    
+    def get_image_url(self):
+        return f'/media/{self.image}'
 
 
 class Comment(models.Model):
