@@ -4,14 +4,59 @@
 
 {% block body %}
 
-<form method="post">
+<form  method="post" enctype="multipart/form-data" class="m-4 border p-5 rounded-5 shadow bg-body-tertiary">
 {% csrf_token %}
-    {% for field in form %}
-    <div class="fieldWrapper">
-        {{ field.errors }}
-        {{ field.label_tag }} {{ field }}
-    </div>
-{% endfor %}
+{#    {{ form.as_p }}#}
+ <h3 class="mb-2 text-center">create new campaign</h3>
+    <div class="fieldWrapper m-2 p-2">
+                 <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.title.id_for_label }}">Project title:</label>
+
+                     {{ form.title }}
+                </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.detail.id_for_label }}">Project Details:</label>
+
+                     {{ form.detail }}
+                </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.category.id_for_label }}">Project category:</label>
+
+                     {{ form.category }}
+                </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.total_target.id_for_label }}">Project target:</label>
+
+                     {{ form.total_target }}
+                </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.featured.id_for_label }}">Featured:</label>
+
+                     {{ form.featured }}
+                </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.tags.id_for_label }}">Project tags:</label>
+
+                     {{ form.tags }}
+                    <span>use comma to spreate tags</span>
+                </div>
+
+                <div class="fieldWrapper m-2">
+                 <label class="text-dark" for="{{ form.image.id_for_label }}">Photo:</label>
+                 {{ form.image }}
+                 </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.start_date.id_for_label }}">start date:</label>
+
+                     {{ form.start_date }}
+                </div>
+                <div class="fieldWrapper m-2">
+                    <label class="text-dark" for="{{ form.end_date.id_for_label }}">end date:</label>
+
+                     {{ form.end_date  }}
+                </div>
+
+</div>
 <button type="submit" class="btn btn-dark">Submit</button>
 </form>
 {% endblock %}

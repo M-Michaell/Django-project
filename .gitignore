@@ -1,5 +1,7 @@
 .venv
+requirements.txt
 Crowdfunding/project/migrations
+
 /migrations/
 /migrations/**
 **/migrations/
