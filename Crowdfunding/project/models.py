@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator,MaxValueValidator
 
 
@@ -7,8 +9,7 @@ from django.core.validators import MinValueValidator,MaxValueValidator
 
 
 
-class User(models.Model):
-    pass
+
 
 
 class Category(models.Model):
@@ -29,7 +30,7 @@ class Campaign(models.Model):
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
     tags = models.ManyToManyField(Tag, blank=True)
-    # when maged add user i will add relation between project and user
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,related_name="campaign")
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,10 +82,41 @@ class Rate(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+class Image(models.Model):
+    image = models.ImageField(upload_to='project/images/', null=True, blank=True )
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
+
+    
+    def get_image_url(self):
+        return f'/media/{self.image}'
+
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=400, null=True)
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
+    
 class Reply(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     reply = models.CharField(max_length=100)
-    # comment = models.ForeignKey()
-    # user = models.ForeignKey()
+    comment = models.ForeignKey(Comment,on_delete=models.CASCADE,related_name="reply")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reply")
 
+class Comment_Report(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_report")
+    report_category=[("1","Flase Information"),
+                  ("2","Violenece"),
+                  ("3","Harassment"),
+                  ("4","spam"),
+                  ("5","Hate speech"),
+                  ("7","Terroism"),
+                  ("8","Something else")]
+    report =  models.CharField(
+        max_length=200,
+        choices=report_category,
+        default='1',
+    )
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
