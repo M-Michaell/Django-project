@@ -26,7 +26,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light px-5">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href=''>enhance</a>
+                    <a class="navbar-brand" href='{% url 'project.home' %}'>enhance</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -37,8 +37,23 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href=''>Products</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">Categories</a>
+{#                            <li class="nav-item">#}
+{#                                <a class="nav-link" href="">Categories</a>#}
+{#                            </li>#}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Categories
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="{% url 'project.createCategory' %}">create category</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'project.list.all.campaign' %}">All Category</a></li>
+                                  {% for foo in cats %}
+                                  	<li><a class="dropdown-item" href="#">{{ foo.name }}</a></li>
+                                  {% endfor %}
+
+
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="">about me</a>

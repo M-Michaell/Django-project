@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator,MaxValueValidator
+from django.contrib.postgres.fields import ArrayField
+from django.shortcuts import reverse
+from taggit.managers import TaggableManager
 
 
 # Create your models here.
@@ -17,10 +20,10 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
-    def __str__(self):
-        return f'{self.name}'
+# class Tag(models.Model):
+#     name = models.CharField(max_length=50)
+#     def __str__(self):
+#         return f'{self.name}'
 
 
 class Campaign(models.Model):
@@ -29,7 +32,8 @@ class Campaign(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
-    tags = models.ManyToManyField(Tag, blank=True)
+    image = models.ImageField(upload_to='project/images/', null=True, blank=True)
+    tags = TaggableManager()
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,related_name="campaign")
     start_date = models.DateField()
     end_date = models.DateField()
@@ -38,6 +42,18 @@ class Campaign(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    def get_image_url(self):
+        return f'/media/{self.image}'
+
+    def get_show_url(self):
+        return reverse('posts.details', args=[self.id])
+
+    def get_edit_url(self):
+        return reverse('posts.edit', args=[self.id])
+
+    def get_delete_url(self):
+        return reverse('posts.delete', args=[self.id])
 
 
 
@@ -83,13 +99,13 @@ class Rate(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='project/images/', null=True, blank=True )
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
-
-    
-    def get_image_url(self):
-        return f'/media/{self.image}'
+# class Image(models.Model):
+#     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
+#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
+#
+#
+#     def get_image_url(self):
+#         return f'/media/{self.image}'
 
 
 class Comment(models.Model):
