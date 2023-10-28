@@ -38,8 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'project.apps.ProjectConfig',
-    'taggit',
-    'account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [
@@ -55,11 +53,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'Crowdfunding.urls'
 
 TEMPLATES = [
-
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates']
-        
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -68,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Crowdfunding.context_processors.show_category'
             ],
         },
     },
@@ -98,10 +95,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
-AUTH_USER_MODEL = 'account.CustomUser'
-AUTHENTICATION_BACKENDS = ['account.backends.EmailBackend']
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -135,9 +128,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'account/static/'),
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -146,12 +136,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'emailer.iti@gmail.com'
-EMAIL_HOST_PASSWORD = 'aviurhkroydbcfmv'
