@@ -56,3 +56,12 @@ class CustomEditAccountForm(forms.ModelForm):
 class MyAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(widget=forms.TextInput(attrs={'autofocus': True}))
 
+
+
+class DeleteForm(forms.Form):
+        password = forms.CharField(
+        widget=forms.PasswordInput(),
+        error_messages={
+            'required': 'Enter Your Password to Confirm.'
+        }
+    )

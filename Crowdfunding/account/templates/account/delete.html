@@ -9,9 +9,18 @@
     <p>Are you sure you want to delete this item?</p>
     <form method="post">
         {% csrf_token %}
+        <span class="error text-danger">{{ form.password.errors.0 }}</span> <!-- Display custom error message here -->
+
+        <div>
+            {{form.password}}
+        </div>
+
         <button type="submit">Delete</button>
         <a href="{% url 'account.edit' %}">Cancel</a>
     </form>
+
+
+    
     
     
 </div style="margin: 100px;">

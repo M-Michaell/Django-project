@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAccountForm
+from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAccountForm, DeleteForm
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.auth import login
 from django.contrib import messages
@@ -16,6 +16,8 @@ from django.views.generic.edit import CreateView
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 def userHome(request):
@@ -99,10 +101,25 @@ class CustomLoginView(LoginView):
         return reverse_lazy('account.home')
 
 
-class CustomDeleteAccountView(DeleteView):
+class DeleteAccountView(DeleteView):
     model = CustomUser
-    template_name = 'account/delete.html'  # Specify the template for the delete confirmation page
+    template_name = 'account/delete.html'  
     success_url = reverse_lazy('account.home')
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        print('inside post')
+        self.object = self.get_object()
+        form = DeleteForm(request.POST)
+
+        if form.is_valid():
+            password = form.cleaned_data['password']
+
+            if request.user.check_password(password):
+                self.object.delete()
+                return redirect(self.success_url)
+        
+        return render(request, self.template_name, {'form': form, 'object': self.object})
     
 
 
