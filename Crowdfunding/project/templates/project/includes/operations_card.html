@@ -2,6 +2,30 @@
 
 
     <div class="card-body">
+        <!-- Display success messages -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            {% if message.tags == "success" %}
+            <li class="success-message text-success">{{ message }}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Display error messages -->
+        {% if messages %}
+        <ul class="messages ">
+            {% for message in messages %}
+            {% if message.tags == "error" %}
+            <li class="error-message text-danger">{{ message }}</li>
+            {% endif %}
+            {%endfor %}
+        </ul>
+        {% endif %}
+
+
+
         <div class="d-flex flex-lg-nowrap align-items-end">
             <p class="fs-4 fw-bold">{{total_donation}}</p>
             <p class="text-light-emphasis ms-1"> L.E raised of {{campaign.total_target}}</p>
@@ -14,10 +38,10 @@
 
 
 
-        <div class="">
+        <div class="d-flex justify-content-center align-items-center my-4">
             <!-- <p class="">rate:{{rating}}</p> -->
 
-            <span>
+            <span class="my-2">
                 <svg viewBox="0 0 1000 200" class="rating m-0">
                     <defs>
                         <polygon id="star"
@@ -31,12 +55,15 @@
                         </clipPath>
                     </defs>
                     <rect class="rating_background" clip-path="url(#stars)"></rect>
-                    <rect width="{{rating}}%" class="rating_value" clip-path="url(#stars)"></rect>
+                    <rect width="{{rating_width}}%" class="rating_value" clip-path="url(#stars)"></rect>
                 </svg>
+            </span>
+            <span class="mx-3">
+                {{rating}}/5
             </span>
         </div>
         <div class="">
-            <p class="">{{donation_count}} donations</p>
+            <p class=" fs-5">{{donation_count}} donations</p>
         </div>
 
         <h5 class="card-title"></h5>
@@ -73,7 +100,7 @@
 
 
 
-                <a class=" text-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                <a class=" text-danger fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
                     aria-expanded="false" aria-controls="collapseExample">
                     Report this Campaign
                 </a>
