@@ -94,15 +94,6 @@ class Rate(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-# class Image(models.Model):
-#     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
-#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
-#
-#
-#     def get_image_url(self):
-#         return f'/media/{self.image}'
-
-
 class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
@@ -131,3 +122,6 @@ class Comment_Report(models.Model):
         default='1',
     )
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
+
+
+

@@ -10,6 +10,7 @@ from project.form import CreateCampaignForm, CreateCategoryForm ,Donation_form
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
 from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 
 #
@@ -41,23 +42,6 @@ class ListAllCategory(ListView):
     model = Category
     template_name = 'project/home.html'
     context_object_name = 'cats'
-
-
-# class CreateTag(CreateView):
-#     model = Tag
-#     template_name = 'project/create_tag.html'
-#     form_class = CreateTagForm
-#     success_url = reverse_lazy('project.createCampaign')
-
-    # def form_valid(self, form):
-    #     # Determine which button was clicked
-    #     if 'save_button' in self.request.POST:
-    #         self.success_url = reverse_lazy('project.createCampaign')
-    #     elif 'other_button' in self.request.POST:
-    #         self.success_url = reverse_lazy('project.createTag')
-    #
-    #     return super().form_valid(form)
-
 
 
 
@@ -105,52 +89,51 @@ class CreateDonation(CreateView):
     def get_success_url(self):
         return reverse('campaign.details', kwargs={'campaign_id': self.kwargs['campaign_id']})
 
-
-
-
-
-
-
-
-def home(request):
-    return render(request, 'project/home.html')
-
-# class CreateImage(CreateView):
-#     model = Image
-#     template_name = 'project/create.html'
-#     form_class = CustomizedImageCreationForm
-#     success_url = reverse_lazy("project.home")
-#
-#     def form_valid(self, form):
-#         # Determine which button was clicked
-#         if 'save' in self.request.POST:
-#             self.success_url = reverse_lazy('project.home')
-#         elif 'add' in self.request.POST:
-#             self.success_url = reverse_lazy('images.create')
-#
-#         return super().form_valid(form)
-
-
-# class DeleteImage(DeleteView):
-#     model = Image
-#     template_name = 'accounts/delete.html'
-#     success_url = reverse_lazy('project.home')
-#
-# class EditProfileView(UpdateView):
-#    model = Image
-#    template_name = 'project/edit.html'
-#    form_class = CustomizedImageCreationForm
-#    success_url = reverse_lazy('project.home')
-#
-# class ImageView(DetailView):
-#     model = Image
-#     template_name = 'project/view.html'
-#     context_object_name = 'image'
-#     def get_object(self, queryset=None):
-#         return self.request.user
-#
+###
 
 def profile(request):
     return render(request, template_name='project/profile.html')
 
+####
+def home(request):
+    featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
+    latest = Campaign.objects.all().order_by('-created_at')[:5]
+    return render(request, 'project/home.html', context = {"featured": featured, "latest": latest})
 
+
+def featured(request):
+    featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
+    return render(request, 'project/featured.html', context = {"featured": featured})
+
+def latest(request):
+        latest = Campaign.objects.all().order_by('-created_at')[:5]
+        return render(request, 'project/latest.html', context = {"latest": latest})
+
+
+def search(request):
+  q = request.GET.get("q", "")
+  campaignList = Campaign.objects.filter(
+      Q(title__icontains=q) | Q(tags__name__icontains=q)
+  )
+
+  if not campaignList:
+    # Redirect to a page with no search results found
+    return render(request, "project/no_search_results.html")
+
+
+  return render(request, "project/search.html", context={"campaignList": campaignList})
+
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = 'project/category_detail.html'
+
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['campaigns'] = Campaign.objects.filter(category__id=self.object.id)
+            return context
+    
+
+class ListAllCategories(ListView):
+    model = Category
+    template_name = 'project/category_detail.html'
+    context_object_name = 'categories'
