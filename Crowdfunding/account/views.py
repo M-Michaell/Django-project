@@ -1,23 +1,28 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAccountForm, DeleteForm
-from django.contrib.auth.views import LoginView,LogoutView
-from django.contrib.auth import login
-from django.contrib import messages
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from account.models import CustomUser
-from django.contrib.sites.shortcuts import get_current_site
-from account.tokens import account_activation_token
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.views.generic.edit import CreateView
-from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
-from django.utils import timezone
+from django.template.loader import render_to_string
+
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.views import PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView,PasswordResetView
+
+from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.views import LoginView,LogoutView
+
 from django.utils.decorators import method_decorator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.utils import timezone
+
+from django.core.mail import EmailMessage
+
+from account.models import CustomUser
+from account.tokens import account_activation_token
+from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAccountForm, DeleteForm
+
 
 
 def userHome(request):
@@ -65,7 +70,6 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        # return redirect('home')
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
@@ -101,7 +105,7 @@ class CustomLoginView(LoginView):
         return reverse_lazy('account.home')
 
 
-class DeleteAccountView(DeleteView):
+class CustomDeleteAccountView(DeleteView):
     model = CustomUser
     template_name = 'account/delete.html'  
     success_url = reverse_lazy('account.home')
@@ -124,8 +128,25 @@ class DeleteAccountView(DeleteView):
 
 
 
-
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy('account.login') 
+
+
+
+
+
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView) :
+    pass
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView) :
+    pass
+
+class CustomPasswordResetDoneView(PasswordResetDoneView) :
+    pass
+
+class CustomPasswordResetView(PasswordResetView) :
+    pass
+
 
 
