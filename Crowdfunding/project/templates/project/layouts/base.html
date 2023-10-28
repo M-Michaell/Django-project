@@ -38,7 +38,7 @@
                                 <a class="nav-link active" aria-current="page" href=''>Products</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="">Categories</a>
+                                <a class="nav-link" href="">{{all_categories}}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="">about me</a>
@@ -49,9 +49,10 @@
                                     Dropdown link
                                 </a>
                                 <ul class="dropdown-menu">
-                                  <li><a class="dropdown-item" href="{% url 'project.createCategory' %}">create capaign</a></li>
-                                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'project.createCategory' %}">create
+                                            capaign</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
                             </li>
 
@@ -92,6 +93,9 @@
         </header>
 
         <div class="mx-auto" style="width: 80%;">
+
+
+
             {% block body %}
 
             {% endblock %}
@@ -106,10 +110,9 @@
         <p class="my-auto">copyrights@noon-noon.com</p>
     </footer>
     <script src="{% static 'project/bootstrap/js/bootstrap.js'%}"> </script>
-    <script src="{% static 'project/bootstrap/js/bootstrap.bundle.min.js'%}"> </script>
 
     <script src="{% static 'project/js/script.js' %}">
-        
+
     </script>
     <script src="{% static 'project/mdb/js/mdb.min.js'%}"> </script>
 </body>

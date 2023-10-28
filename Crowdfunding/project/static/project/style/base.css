@@ -1,3 +1,4 @@
-nav , footer{
-    background-image: linear-gradient(rgba(135, 3, 111, 1),rgba(59, 18, 244,.6));
+nav,
+footer {
+    background-image: linear-gradient(rgb(197, 148, 188), rgba(59, 18, 244, .6));
 }

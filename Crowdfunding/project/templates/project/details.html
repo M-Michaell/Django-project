@@ -157,21 +157,7 @@
 
     <hr>
     <!-- comments -->
-    <div>
-      <h4>comments ({{ comments|length }}):</h4>
-
-      {%for comment in comments%}
-      <div class="border border-1 px-4 my-1">
-        <p class="fs-6 fw-bold my-3">user: {{comment.user}}</p>
-        <p class="ms-2 text-body-secondary ">{{comment.comment}}</p>
-        <p class="ms-2 text-body-secondary">{{comment.created_at}}</p>
-        <div class="ms-5 ps-5">
-          <a class="m-3">reply</a>
-          <a> show replies </a>
-        </div>
-      </div>
-      {%endfor%}
-    </div>
+    {% include 'project/includes/comment.html'%}
 
   </div>
 
@@ -185,71 +171,12 @@
 
 
   <!-- card -->
-  <div class="col-xl-4 col-auto order-first order-xl-last mt-5 pt-5">
-    <div class="card sticky-top mt-5 shadow-lg">
+  <div class="col-xl-4 col order-first order-xl-last mt-5 pt-5">
 
+    {% include 'project/includes/operations_card.html'%}
 
-      <div class="card-body">
-        <div class="d-flex flex-lg-nowrap align-items-end">
-          <p class="fs-4 fw-bold">{{total_donation}}</p>
-          <p class="text-light-emphasis ms-1"> L.E raised of {{campaign.total_target}}</p>
-
-        </div>
-        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0"
-          aria-valuemax="100">
-          <div class="progress-bar" style="width: {{progress}}% "></div>
-        </div>
-
-
-
-        <div class="">
-          <!-- <p class="">rate:{{rating}}</p> -->
-
-          <span>
-            <svg viewBox="0 0 1000 200" class="rating m-0">
-              <defs>
-                <polygon id="star" points="100,0 131,66 200,76 150,128 162,200 100,166 38,200 50,128 0,76 69,66 " />
-                <clipPath id="stars">
-                  <use xlink:href="#star" />
-                  <use xlink:href="#star" x="20%" />
-                  <use xlink:href="#star" x="40%" />
-                  <use xlink:href="#star" x="60%" />
-                  <use xlink:href="#star" x="80%" />
-                </clipPath>
-              </defs>
-              <rect class="rating_background" clip-path="url(#stars)"></rect>
-              <rect width="{{rating}}%" class="rating_value" clip-path="url(#stars)"></rect>
-            </svg>
-          </span>
-        </div>
-        <div class="">
-          <p class="">{{donation_count}} donations</p>
-        </div>
-
-        <h5 class="card-title"></h5>
-        <a class="btn btn-dark " href="{% url 'campaign.donation' campaign.id %}">Donation now</a>
-
-
-
-
-        <div>
-          <p>rate</p>
-          <a class="btn btn-dark">rate now</a>
-        </div>
-        <div>
-          <a class="text-decoration-none text-danger">report this project</a>
-        </div>
-
-        <p class="card-text">
-          This is a wider card with supporting text below as a natural lead-in
-          to additional content. This content is a little bit longer
-        </p>
-      </div>
-      <div class="card-footer">
-        <small class="text-body-secondary">Last updated 3 mins ago</small>
-      </div>
-    </div>
   </div>
 </div>
+
 
 {% endblock %}

@@ -1,11 +1,12 @@
-from django.shortcuts import render ,redirect
+from django.shortcuts import render ,redirect 
+from django.template import loader
 from django.urls import reverse_lazy ,reverse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from django.db.models import Sum, Count,Avg
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView ,DetailView
-from project.form import CreateCampaignForm, CreateCategoryForm, CreateTagForm , CustomizedImageCreationForm ,Donation_form
+from project.form import CreateCampaignForm, CreateCategoryForm, CreateTagForm , CustomizedImageCreationForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,CreateCommentReportForm
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Tag,Image,Comment_Report
 
 
@@ -47,50 +48,116 @@ class CreateTag(CreateView):
 
 
 
+def campaign_details(request, campaign_id):
+    try:
+        campaign = Campaign.objects.get(pk=campaign_id)
+    except Campaign.DoesNotExist:
+        raise Http404("Campaign does not exist")
 
-def campaign_details(request,campaign_id):
-
-    campaign = Campaign.objects.get(pk=campaign_id)
     total_donation = campaign.donation.aggregate(total_donation=Sum('donation'))['total_donation'] or 0.00
     donation_count = campaign.donation.aggregate(donation_count=Count('id'))['donation_count']
     comments = campaign.comments.all()
     tags = campaign.tags.all()
-    images_all=campaign.image.all()
-    rating=campaign.rate.aggregate(rate=Avg('rate'))['rate']or 0.00
+    images_all = campaign.image.all()
+    rating = campaign.rate.aggregate(rate=Avg('rate'))['rate'] or 0.00
     related_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()[:4]
-    progress =(total_donation/campaign.total_target)*100
+    progress = (total_donation / campaign.total_target) * 100
+    last_donation = Donation.objects.filter(campaign=campaign).last().created_at
 
-    print(f"Campaign ID: {campaign_id}")
-    print(f"Tags of Original Campaign: {list(campaign.tags.all())}")
-    print(images_all)
-    for c in related_campaigns:
-        print(f"{c.title, c.id}")
-    f_image=images_all[0]
-    images=images_all[1:]
+    # Initialize your forms
+    comment_form = CreateCommentForm()
+    donation_form = CreateDonationForm()
+    report_form = CreateReportForm()
+    comment_report_form =CreateCommentReportForm()
+    create_rate =CreateRatingForm()
 
-    context={
+
+
+    context = {
         'campaign': campaign,
-        'total_donation':total_donation,
-        'donation_count':donation_count,
-        'comments':comments ,
-        'tags':tags,
-        'rating':rating*20,
-        'f_image':f_image,
-        'images':images,
-        'related_campaigns':related_campaigns,
-        "progress":progress
+        'total_donation': total_donation,
+        'donation_count': donation_count,
+        'comments': comments,
+        'tags': tags,
+        'rating': rating * 20,
+        'f_image': images_all[0],
+        'images': images_all[1:],
+        'related_campaigns': related_campaigns,
+        "progress": progress,
+        'comment_form': comment_form,
+        'donation_form': donation_form,
+        'report_form': report_form,
+        "comment_report_form":comment_report_form,
+        'last_donation': last_donation,
+        "create_rate":create_rate
     }
+
+    if request.method == 'POST':
+        if 'comment_submit' in request.POST:
+            comment_form = CreateCommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.campaign = campaign
+                comment.user = request.user
+                comment.save()
+                return redirect('campaign.details', campaign_id=campaign_id)
+
+        elif 'donation_submit' in request.POST:
+            donation_form = CreateDonationForm(request.POST)
+            if donation_form.is_valid():
+                donation = donation_form.save(commit=False)
+                donation.campaign = campaign
+                donation.user = request.user
+                donation.save()
+                return redirect('campaign.details', campaign_id=campaign_id)
+
+            
+        elif 'report_submit' in request.POST:
+            report_form = CreateReportForm(request.POST)
+            if report_form.is_valid():
+                report = report_form.save(commit=False)
+                report.campaign = campaign
+                report.user = request.user
+                report.save()
+                return redirect('campaign.details', campaign_id=campaign_id)
+            
+        elif 'comment_report' in request.POST:
+            comment_report_form = CreateCommentReportForm(request.POST)
+            if comment_report_form.is_valid():
+                comment_id = request.POST['comment_id']  
+                report = comment_report_form.save(commit=False)
+                report.comment = Comment.objects.get(id=comment_id)
+                report.user = request.user
+                report.save()
+                return redirect('campaign.details', campaign_id=campaign_id)
+            
+
+        elif 'rate_submit' in request.POST:
+            create_rate = CreateRatingForm(request.POST)
+            if create_rate.is_valid():
+                rate = create_rate.save(commit=False)
+                rate.user = request.user
+                rate.campaign = campaign
+                rate.save()
+                return redirect('campaign.details', campaign_id=campaign_id)
+            
+
+
+
+
     return render(request, 'project/details.html', context=context)
+
 
 
 
 class CreateDonation(CreateView):
     model = Donation
     template_name = 'project/create_donation.html'
-    form_class = Donation_form
+    form_class = CreateDonationForm
     success_url = reverse_lazy('campaign.details',id='campaign_id')
     def get_success_url(self):
         return reverse('campaign.details', kwargs={'campaign_id': self.kwargs['campaign_id']})
+
 
 
 
