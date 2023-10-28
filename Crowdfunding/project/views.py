@@ -3,7 +3,6 @@ from django.template import loader
 from django.urls import reverse_lazy ,reverse
 from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-
 from django.db.models import Sum, Count,Avg
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView ,DetailView
@@ -49,7 +48,9 @@ class CreateTag(CreateView):
 
 
 from django.contrib.messages import add_message, constants as messages
-
+# def getUser(request):
+#         user = Register.objects.get(id=request.session['user_id'])
+#         return user
 def campaign_details(request, campaign_id):
     try:
         campaign = Campaign.objects.get(pk=campaign_id)
@@ -63,8 +64,12 @@ def campaign_details(request, campaign_id):
     images_all = campaign.image.all()
     rating = round(campaign.rate.aggregate(rate=Avg('rate'))['rate'] or 0.00 ,2)
     related_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()[:4]
-    progress = (total_donation / campaign.total_target) * 100
-    last_donation = Donation.objects.filter(campaign=campaign).last().created_at
+    progress = (float(total_donation) / float(campaign.total_target)) * 100
+    if Donation.objects.filter(campaign=campaign).last() :
+        last_donation = Donation.objects.filter(campaign=campaign).last().created_at
+    else:
+        last_donation="no donations yet"
+    
 
     # Initialize your forms
     comment_form = CreateCommentForm()
@@ -92,7 +97,9 @@ def campaign_details(request, campaign_id):
     'last_donation': last_donation,
     "create_rate":create_rate,
     "rating" :rating,
-    "error_message": error_message 
+    "error_message": error_message,
+    "request": request,
+
 }
 
     if request.method == 'POST':
@@ -116,7 +123,7 @@ def campaign_details(request, campaign_id):
                 add_message(request, messages.SUCCESS, "Your donation has been successfully processed.")
                 return redirect('campaign.details', campaign_id=campaign_id)
             else:
-                add_message(request, messages.ERROR, "Your donation should be geater than 5 .")
+                add_message(request, messages.ERROR, "Your donation should be geater than 5.")
                 return redirect('campaign.details', campaign_id=campaign_id)
 
             
@@ -155,7 +162,7 @@ def campaign_details(request, campaign_id):
                     rate.campaign = campaign
                     rate.save()
                     add_message(request, messages.SUCCESS, "Your rating has been successfully added.")
-                    return
+                    return redirect('campaign.details', campaign_id=campaign_id)
 
 
 

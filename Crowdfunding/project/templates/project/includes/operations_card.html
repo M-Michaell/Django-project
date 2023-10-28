@@ -2,27 +2,38 @@
 
 
     <div class="card-body">
+
+
         <!-- Display success messages -->
         {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            {% if message.tags == "success" %}
-            <li class="success-message text-success">{{ message }}</li>
-            {% endif %}
-            {% endfor %}
-        </ul>
+        {% for message in messages %}
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <ul class="messages">
+                <li class="success-message text-success">{{ message }}</li>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         {% endif %}
+        {% endfor %}
+        {% endif %}
+
 
         <!-- Display error messages -->
         {% if messages %}
-        <ul class="messages ">
-            {% for message in messages %}
-            {% if message.tags == "error" %}
-            <li class="error-message text-danger">{{ message }}</li>
-            {% endif %}
-            {%endfor %}
-        </ul>
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="messages ">
+                <li class="error-message ">{{ message }}</li>
+            </ul>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         {% endif %}
+        {%endfor %}
+        {% endif %}
+
 
 
 
@@ -67,6 +78,8 @@
         </div>
 
         <h5 class="card-title"></h5>
+
+        {% if campaign.total_target > total_donation %}
         <a class="text-primary fs-5 fw-bold" type="button" data-bs-toggle="collapse"
             data-bs-target="#donationFormCollapse" aria-expanded="false">
             Donate now
@@ -78,6 +91,9 @@
                 <button type="submit" name="donation_submit" class="btn btn-dark">Donate</button>
             </form>
         </div>
+        {% else %}
+        <p class="fs-5 text-success">This campaign has reach the total target, thanks for your donations</p>
+        {% endif %}
         <div>
 
 
@@ -104,7 +120,6 @@
                     aria-expanded="false" aria-controls="collapseExample">
                     Report this Campaign
                 </a>
-                </p>
                 <div class="collapse" id="collapseExample">
                     <form method="post">
 
@@ -115,15 +130,11 @@
                     </form>
                 </div>
             </div>
+            <div>
+            </div>
 
-
-
-
-            <p class="card-text">
-
-            </p>
         </div>
-        <div class="card-footer">
+        <div class="card-footer p-1 my-0">
             <small class="text-body-secondary">last donaion: {{last_donation}}</small>
         </div>
     </div>
