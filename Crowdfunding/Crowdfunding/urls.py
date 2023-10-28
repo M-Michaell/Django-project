@@ -22,5 +22,7 @@ from project.views import ListAllCategory
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('' ,include('project.urls'))
+    path('', include('project.urls')),
+    path('account/', include('account.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

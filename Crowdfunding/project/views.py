@@ -150,5 +150,7 @@ def home(request):
 #         return self.request.user
 #
 
-    
+def profile(request):
+    return render(request, template_name='project/profile.html')
+
 

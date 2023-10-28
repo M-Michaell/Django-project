@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.auth.models import User
+from account.models import CustomUser
 from django.core.validators import MinValueValidator,MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
@@ -8,12 +7,6 @@ from taggit.managers import TaggableManager
 
 
 # Create your models here.
-
-
-
-
-
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -34,7 +27,9 @@ class Campaign(models.Model):
     featured = models.BooleanField()
     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
     tags = TaggableManager()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,related_name="campaign")
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,related_name="campaign")
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None,related_name="campaign")
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -64,14 +59,14 @@ class Donation (models.Model):
                                    validators=[MinValueValidator(limit_value=5.00)],
                                    default=5.00)
     project = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="donation")
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="donation")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="donation")
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 
 
 class Report (models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE,related_name="reports")
+    user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="reports")
     project = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="reports")
     report_category =[("1","Flase Information"),
                   ("2","Violenece"),
@@ -94,7 +89,7 @@ class Rate(models.Model):
             MaxValueValidator(5)
         ])
     projcet = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name="rate")
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="rate")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="rate")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -112,17 +107,17 @@ class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="comment")
     
 class Reply(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     reply = models.CharField(max_length=100)
     comment = models.ForeignKey(Comment,on_delete=models.CASCADE,related_name="reply")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reply")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reply")
 
 class Comment_Report(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_report")
+    user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="comment_report")
     report_category=[("1","Flase Information"),
                   ("2","Violenece"),
                   ("3","Harassment"),
