@@ -137,5 +137,7 @@ class ImageView(DetailView):
         return self.request.user
     
 
-    
+def profile(request):
+    return render(request, template_name='project/profile.html')
+
 
