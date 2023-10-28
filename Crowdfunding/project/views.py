@@ -1,5 +1,7 @@
-from django.shortcuts import render
-# from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView
+from django.shortcuts import render, redirect, reverse
+
+
 # from project.models import Campaign
 # from project.form import CreateModelForm
 #
@@ -8,3 +10,7 @@ from django.shortcuts import render
 #     model = Campaign
 #     template_name = 'project/create.html'
 #     form_class = CreateModelForm
+
+
+def profile(request):
+    return render(request, template_name='project/profile.html')
