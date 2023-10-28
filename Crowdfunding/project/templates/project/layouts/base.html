@@ -8,16 +8,15 @@
     <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.css'%}">
     <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.min.css'%}">
     <link rel="stylesheet" href="{% static 'project/style/base.css'%}">
+    <link rel="stylesheet" href="{% static 'project/mdb/css/mdb.min.css'%}">
     <style>
         li {
             color: red;
         }
-        .text-truncate{
-            max-width:350px ;
 
-        }
-        nav{
-            background-color:
+        .text-truncate {
+            max-width: 350px;
+
         }
     </style>
 </head>
@@ -25,7 +24,7 @@
 <body style="position: relative;">
     <div style="position: relative ; min-height: 90vh;">
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light px-5" >
+            <nav class="navbar navbar-expand-lg navbar-light px-5">
                 <div class="container-fluid">
                     <a class="navbar-brand" href=''>enhance</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -36,8 +35,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page"
-                                    href=''>Products</a>
+                                <a class="nav-link active" aria-current="page" href=''>Products</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="">Categories</a>
@@ -46,15 +44,16 @@
                                 <a class="nav-link" href="">about me</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Dropdown link
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Dropdown link
                                 </a>
                                 <ul class="dropdown-menu">
-                                  <li><a class="dropdown-item" href="#">Action</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'project.createCategory' %}">create capaign</a></li>
                                   <li><a class="dropdown-item" href="#">Another action</a></li>
                                   <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
-                              </li>
+                            </li>
 
                         </ul>
                         <form class="d-flex" method="post" action="">
@@ -92,7 +91,7 @@
             </nav>
         </header>
 
-        <div class="container">
+        <div class="mx-auto" style="width: 80%;">
             {% block body %}
 
             {% endblock %}
@@ -110,8 +109,9 @@
     <script src="{% static 'project/bootstrap/js/bootstrap.bundle.min.js'%}"> </script>
 
     <script src="{% static 'project/js/script.js' %}">
-
+        
     </script>
+    <script src="{% static 'project/mdb/js/mdb.min.js'%}"> </script>
 </body>
 
 </html>
