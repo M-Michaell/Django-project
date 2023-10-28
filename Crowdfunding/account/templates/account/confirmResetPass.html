@@ -1,0 +1,26 @@
+{% extends 'account/layout/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div style="margin: 100px;">
+    <h1>
+        confirm reset pass
+    </h1>
+</div>
+
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.new_password1.label_tag }} {{ form.new_password1 }}
+    <!-- Customize the new_password1 field display as needed -->
+    {{ form.new_password1.errors }}
+    {{ form.new_password2.label_tag }} {{ form.new_password2 }}
+    <!-- Customize the new_password2 field display as needed -->
+    {{ form.new_password2.errors }}
+    <button type="submit">Change Password</button>
+</form>
+
+
+{% endblock %}

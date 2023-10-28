@@ -56,6 +56,13 @@ class CustomEditAccountForm(forms.ModelForm):
 class MyAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(widget=forms.TextInput(attrs={'autofocus': True}))
 
+    error_messages = {
+        'invalid_login':(
+            "Please enter a correct email and password. Note that both fields may be case-sensitive."
+        ),
+        'inactive':("This account is inactive."),
+    }
+
 
 
 class DeleteForm(forms.Form):

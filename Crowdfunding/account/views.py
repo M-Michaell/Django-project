@@ -134,19 +134,25 @@ class CustomLogoutView(LogoutView):
 
 
 
-
+class CustomPasswordResetView(PasswordResetView) :
+    template_name='account/resetPass.html'
+    pass
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView) :
+    template_name='account/completeResetPass.html'
     pass
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView) :
+    template_name='account/confirmResetPass.html'
+
     pass
 
 class CustomPasswordResetDoneView(PasswordResetDoneView) :
+    template_name='account/doneResetPass.html'
+
     pass
 
-class CustomPasswordResetView(PasswordResetView) :
-    pass
+
 
 
 
