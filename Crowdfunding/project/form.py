@@ -2,6 +2,8 @@ from datetime import datetime
 from django.core.exceptions import ValidationError
 from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
+from django.contrib.auth.forms import AuthenticationForm
+
 
 
 

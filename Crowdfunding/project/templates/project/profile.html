@@ -5,7 +5,7 @@ Profile {% endblock %}
 {% block body %}
 
 <div class="container">
-      <div class="justify-content-around d-flex">
+      <div class="justify-content-around d-flex" style="width: 110%;">
         <div class="" style="align-items: center; text-align: center;">
         <div class="p-5 m-4 rounded-3 grid gap-5 justify-content-around w-100 text-white" style="background-color:rgb(180, 143, 193); ">
             <img src="{{user.get_image_url}}" alt=""style="border-radius: 100px; height: 150px; width: 150px;">
@@ -25,8 +25,7 @@ Profile {% endblock %}
       <div
         class="bg-body-tertiary p-5 m-2 rounded-3 d-flex grid gap-5 justify-content-around shadow-lg col-9"
      >
-    
-        <div class="" style="">
+       <div class="" style="">
           <div class="d-flex gap-2">
             <h5 class="text-black"><i class="fa-solid fa-user me-2"></i>First Name :</h5>
             <h5 class="text-body-secondary">{{user.username}}</h5>
@@ -60,7 +59,7 @@ Profile {% endblock %}
           <div
             class="bg-body-tertiary p-3 m-3 rounded-3 d-flex grid gap-5 justify-content-center shadow-lg "
           >
-            <a href="" class="text-decoration-none text-black fs-3"><i class="fa-solid fa-chart-pie me-2"></i>{{user.donation|length}} Donations</a>
+            <a href="" class="text-decoration-none text-black fs-3"><i class="fa-solid fa-chart-pie me-2"></i>{{user_donation|length}} Donations</a>
           </div>
           <div
             class="bg-body-tertiary p-3 m-3 rounded-3 d-flex grid gap-5 justify-content-center shadow-lg"
@@ -102,19 +101,20 @@ Profile {% endblock %}
      
 
 </div>
-<div class="card-group" style="width: 35%;">
-<div class="card" style="display: flex;">
-  {% for c in user_campaign %}
-  <div>
-  <div class="col-12">
 
-  <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="card-img-top" />
+<div class="row row-cols-3">
+
+  {% for c in user_campaign %}
+  <div class="col-3  rounded-5 shadow m-3">
+
+  <img src="{{ c.get_image_url }}" style="height: 150px;"
+  class="card-img-top rounded-5 card  mt-2" />
   <div class="card-body">
     <div class="d-flex justify-content-between">
       <h5 class="card-title">{{ c.title }}</h5>
       <p class="card-text">{{ c.category }}</p>
   </div>
-  <p class="card-text"><strong>Details: </strong>{{ c.detail }}</p>
+  <p class="card-text"><strong class="me-2">Details: </strong>{{ c.detail }}</p>
 </div>
 </div>
 {% endfor %}
@@ -128,5 +128,4 @@ Profile {% endblock %}
 </div>
 </div>
 {% endblock %}
-
 
