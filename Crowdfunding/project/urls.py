@@ -25,7 +25,7 @@ urlpatterns = [
 
 
 
-    path('upload/', UploadView.as_view(), name="project.upload")
+    path('upload/', login_required(UploadView.as_view()), name="project.upload")
 
 ]
 

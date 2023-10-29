@@ -50,6 +50,14 @@ class Campaign(models.Model):
     def get_delete_url(self):
         return reverse('project.deleteCampaign', args=[self.id])
 
+    @classmethod
+    def get_sepcific_object(cls, id):
+        return cls.objects.get(id=id)
+
+    @classmethod
+    def get_all_campaign(cls):
+        return cls.objects.all()
+
 
 # class Image(models.Model):
 #     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
