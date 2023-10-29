@@ -5,6 +5,7 @@ from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation
 from django.contrib.auth.forms import AuthenticationForm
 
 
+
 from django import forms
 from project.models import Campaign, Category
 
@@ -106,7 +107,7 @@ class CreateCommentReportForm(forms.ModelForm):
 class CreateReplyForm(forms.ModelForm):
     class Meta:
         model=Reply
-        fields='__all__'
+        fields=("reply",)
 
         
 class CreateDonationForm(forms.ModelForm):
@@ -121,8 +122,6 @@ class PasswordConfirmationForm(AuthenticationForm):
         widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}),
     )
 
-
-# test image ------------------------------------------------------------------
 
 from django import forms
 from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
