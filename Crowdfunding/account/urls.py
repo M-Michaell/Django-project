@@ -4,6 +4,7 @@ from account.views import CustomPasswordResetCompleteView,CustomPasswordResetCon
 from account.views import csrf_failure_redirect,PasswordResetErrorView
 
 urlpatterns = [
+    
     path('register/', CustomRegistrationView.as_view(), name='account.register'),
     path('login/', CustomLoginView.as_view(), name='account.login'),
     path('logout/', CustomLogoutView.as_view(), name='account.logout'),
