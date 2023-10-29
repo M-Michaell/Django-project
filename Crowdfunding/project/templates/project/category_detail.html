@@ -1,0 +1,34 @@
+{% extends 'project/layouts/base.html' %}
+
+{% block title %} Projects in {{ category.name }} Category {% endblock %}
+
+{% block body %}
+  <h1 class="text-center mt-5">Projects in {{ category.name }} Category</h1>
+<div class="container mt-5">
+    <div class="row" style="width: 1300px;">
+        {% for campaign in campaigns %}
+            <div class="col-4">
+                <div class="card border-0 mb-4 w-30">
+                    <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                        <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid" />
+                        <a href="#!">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ campaign.title }}</h5>
+                        <p class="card-text">{{ campaign.category }}</p>
+                        <p class="card-text"><strong>Details: </strong>{{ campaign.detail }}</p>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{%url 'project.home'%}" class="btn btn-primary">Back to Home</a>
+    </div>
+</div>
+
+{% endblock %}

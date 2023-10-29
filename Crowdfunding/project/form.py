@@ -1,11 +1,8 @@
 from datetime import datetime
 from django.core.exceptions import ValidationError
 from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
-
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
-
 from django import forms
-
 from project.models import Campaign, Category
 
 class CreateCampaignForm(forms.ModelForm):
@@ -63,25 +60,65 @@ class CreateCategoryForm(forms.ModelForm):
 
 
 
-
-class Report_form(forms.ModelForm):
+class CreateReportForm(forms.ModelForm):
     class Meta:
-        model=Report
-        fields='__all__'
+        model = Report
+        fields = ('report', 'report_comment')
+        widgets = {
+            'report_comment': forms.Textarea(attrs={'class': 'form-control','rows':"2"}),
+            'report':forms.Select(attrs={'class': 'form-control'})
+        }
+
+    # def clean_report_comment(self):
+    #     data = self.cleaned_data['report_comment']
+
+    #     if not data.is_valid():
+    #         raise forms.ValidationError("Invalid data")
+    #     return data
+
+
+class CreateCommentForm(forms.ModelForm):
+    class Meta:
+        model=Comment
+        fields=('comment',)
+
+class CreateRatingForm(forms.ModelForm):
+    class Meta:
+        model = Rate
+        fields = ('rate',)
+        widgets = {
+            'rate':forms.Select(attrs={'class': 'form-control'})
+        }
         
-class Comment_report_form(forms.ModelForm):
+class CreateCommentReportForm(forms.ModelForm):
     class Meta:
         model=Comment_Report
-        fields='__all__'
+        fields=('report',)
+        widgets = {
+            'report':forms.Select(attrs={'class': 'form-control'})
+        }
+
 
         
-class Reply_form(forms.ModelForm):
+class CreateReplyForm(forms.ModelForm):
     class Meta:
         model=Reply
         fields='__all__'
 
         
-class Donation_form(forms.ModelForm):
+class CreateDonationForm(forms.ModelForm):
     class Meta:
         model=Donation
-        fields='__all__'
+        fields=('donation',)
+
+
+# test image ------------------------------------------------------------------
+
+from django import forms
+from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
+
+
+class UploadForm(forms.Form):
+    campaign = forms.ModelChoiceField(queryset=Campaign.objects.all())
+    attachments = MultiImageField(min_num=1, max_num=3, max_file_size=1024 * 1024 * 5)
+

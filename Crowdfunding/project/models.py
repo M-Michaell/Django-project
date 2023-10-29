@@ -51,7 +51,6 @@ class Campaign(models.Model):
         return reverse('project.deleteCampaign', args=[self.id])
 
 
-
 # class Image(models.Model):
 #     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
 #     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
@@ -64,7 +63,7 @@ class Donation (models.Model):
                                     decimal_places=2 ,
                                    validators=[MinValueValidator(limit_value=5.00)],
                                    default=5.00)
-    project = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="donation")
+    campaign = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="donation")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="donation")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -73,7 +72,7 @@ class Donation (models.Model):
 
 class Report (models.Model):
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="reports")
-    project = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="reports")
+    campaign = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="reports")
     report_category =[("1","Flase Information"),
                   ("2","Violenece"),
                   ("3","Harassment"),
@@ -84,20 +83,28 @@ class Report (models.Model):
                   ("8","Something else")
                   ]
     report=models.CharField(max_length=50,choices=report_category,default="1")
-    report_comment=models.TextField(default='')
+    report_comment=models.TextField(default='',null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Rate(models.Model):
-    rate = models.IntegerField(
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(5)
-        ])
-    projcet = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name="rate")
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="rate")
+
+    RATE_CHOICES = [
+        (1, "⭐"),
+        (2, "⭐⭐"),
+        (3, "⭐⭐⭐"),
+        (4, "⭐⭐⭐⭐"),
+        (5, "⭐⭐⭐⭐⭐"),
+    ]
+
+    rate = models.IntegerField(choices=RATE_CHOICES, default=1)
+    campaign = models.ForeignKey('Campaign', on_delete=models.CASCADE, related_name='rate')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='rate')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.campaign.title} with {self.rate} stars"
 
 
 
@@ -129,3 +136,10 @@ class Comment_Report(models.Model):
         default='1',
     )
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
+
+
+
+#test image-------------------------------------------------------------------
+class Attachment(models.Model):
+    image = models.ImageField(upload_to='project/images',null=False, blank=False)
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
