@@ -16,7 +16,8 @@ from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from account.models import CustomUserfrom django.contrib.messages import add_message, constants as messages
+from account.models import CustomUser
+from django.contrib.messages import add_message, constants as messages
 
 
 
@@ -78,16 +79,24 @@ def campaign_details(request, campaign_id):
     tags = campaign.tags.all()
     images_all = campaign.images.all()
     rating = round(campaign.rate.aggregate(rate=Avg('rate'))['rate'] or 0.00 ,2)
-    related_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()[:4]
-    progress = (float(total_donation) / float(campaign.total_target)) * 100
+    rel_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()
+    
+    
+    related_campaigns=[]
 
-    # active_user_id=getUser(request)
+    for camp in rel_campaigns:
+        camp_total_donation = camp.donation.aggregate(total_donation=Sum('donation'))['total_donation'] or 0.00
+        if len(related_campaigns)<4 :
+            if camp.total_target > camp_total_donation:
+                related_campaigns.append(camp)
+        else :break
+
     if Donation.objects.filter(campaign=campaign).last() :
         last_donation = Donation.objects.filter(campaign=campaign).last().created_at
     else:
         last_donation="no donations yet"
     can_cancel=False
-    if progress < 25:
+    if campaign.get_progress() < 25:
         can_cancel=True
     
 
@@ -99,7 +108,6 @@ def campaign_details(request, campaign_id):
     create_rate =CreateRatingForm()
     password_form = PasswordConfirmationForm()
 
-    error_message = None
     context = {
     'campaign': campaign,
     'total_donation': total_donation,
@@ -107,10 +115,8 @@ def campaign_details(request, campaign_id):
     'comments': comments,
     'tags': tags,
     'rating_width': rating * 20,
-    'f_image': images_all[0],
-    'images': images_all[1:],
+    'images': images_all,
     'related_campaigns': related_campaigns,
-    "progress": progress,
     'comment_form': comment_form,
     'donation_form': donation_form,
     'report_form': report_form,
@@ -118,12 +124,9 @@ def campaign_details(request, campaign_id):
     'last_donation': last_donation,
     "create_rate":create_rate,
     "rating" :rating,
-    "error_message": error_message,
     "request": request,
     'password_form': password_form,
     'can_cancel':can_cancel
-    
-    # "active_user_id":active_user_id,
 
 }
 

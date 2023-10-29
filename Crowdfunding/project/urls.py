@@ -8,6 +8,8 @@ from project.views import CreateCampaign,  CreateCategory, home, featured, lates
 
 
 urlpatterns = [
+    path('list_all/', ListAllCampaign.as_view(), name="project.list.all.campaign"),
+    path('donation/<int:campaign_id>', CreateDonation.as_view(),name="campaign.donation"),
     path('craete_category/', CreateCategory.as_view(), name="project.createCategory"),
     path('craete_campaign/',CreateCampaign.as_view(), name="project.createCampaign"),
     path('details/<int:campaign_id>', campaign_details , name="campaign.details"),

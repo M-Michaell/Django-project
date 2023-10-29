@@ -4,7 +4,6 @@
 
 
 {% block body %}
-
 <style>
   svg {
     margin-bottom: 2em;
@@ -63,6 +62,14 @@
     margin: auto;
     width: fit-content;
   }
+
+  .fixed-height-card {
+    height: 300px;
+  }
+
+  .fixed-height-card img {
+    height: 300px;
+  }
 </style>
 <div style="width: 80%;" class="mx-auto">
   <div class="row row-cols-1 row-cols-xl-2 g-2 justify-content-between">
@@ -92,53 +99,94 @@
           <a class="btn btn-secondary ms-2">{{tag}}</a>
           {%endfor%}
         </div>
+
+        {% if request.user.id == campaign.user.id %}
+        <hr>
+
+        <div class="d-flex ">
+          <a class="btn btn-dark mx-auto" href="{{campaign.get_edit_url}}">Edit this campaign</a>
+        </div>
+
+        {% endif %}
       </div>
 
       <hr>
+
+
+
       <!-- Related Campaigns: -->
       <h3>Related Campaigns:</h3>
       <div class="row row-cols-1 row-cols-md-2 g-4 p-3">
         {% for camp in related_campaigns %}
-        <div class="col">
-          <div class="card h-100">
-            <img src="{{camp.image.all.0.get_image_url}}" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">{{ camp.title }}</h5>
 
+        <div class="col">
+          <a href="{% if user.is_authenticated %}
+                    {{ camp.get_details }}
+                    {% else %}
+                    {% url 'account.login' %}?next={{ camp.get_details }}
+                    {% endif %}">
+            <div class="card h-100  fixed-height-card">
+              <img src="{{camp.get_image_url}}" class="card-img-top shadow shadow-1-secondary " alt="...">
+              <div class="card-body pb-2">
+                <h5 class="card-title text-black">{{ camp.title }}</h5>
+          </a>
+          <div>
+            <p class="text-truncate">Details: {{camp.detail}}</p>
+          </div>
+          <!-- progrss -->
+          <div class="my-3">
+            <div class="d-flex flex-lg-nowrap align-items-end">
+              <p class="text-light-emphasis ms-1 fw-bold">{{camp.get_total_deonation}}</p>
+              <p class="text-light-emphasis ms-1">
+                L.E raised of {{camp.total_target}}
+              </p>
             </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">Last updated 3 mins ago</small>
+            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+              aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: {{camp.get_progress}}% "></div>
             </div>
           </div>
+          <!-- progrss -->
+          <p class="d-flex justify-content-start align-items-center">
+            Category:
+            <a class="btn btn-secondary ms-2" href="{% url 'category_detail' camp.category.id %}">{{camp.category}}</a>
+          </p>
         </div>
-        {% endfor %}
+        <div class="card-footer">
+          <small class="text-body-secondary">End date: {{camp.end_date}}</small>
+        </div>
       </div>
-      <!-- end Related Campaigns: -->
-
-
-
-      <hr>
-      <!-- comments -->
-      {% include 'project/includes/comment.html'%}
-
     </div>
 
-
-
-
-
-
-
-
-
-
-    <!-- card -->
-    <div class="col-xl-4 col order-first order-xl-last mt-5 pt-5">
-
-      {% include 'project/includes/operations_card.html'%}
-
-    </div>
+    {% endfor %}
   </div>
+
+  <!-- end Related Campaigns: -->
+
+
+
+  <hr>
+  <!-- comments -->
+  {% include 'project/includes/comment.html'%}
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- card -->
+<div class="col-xl-4 col order-first order-xl-last mt-5 pt-5">
+
+  {% include 'project/includes/operations_card.html'%}
+
+</div>
+</div>
 </div>
 
 {% endblock %}
