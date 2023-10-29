@@ -8,7 +8,7 @@
 <form method="post">
 {% csrf_token %}
     {% for field in form %}
-    <div class="fieldWrapper m-3 p-5">
+    <div class="fieldWrapper m-4 border p-5 rounded-5 shadow bg-body-tertiary w-75 m-auto mt-4">
         {{ field.label_tag }} {{ field }}
           {{ field.errors }}
     <button type="submit" class="btn btn-dark m-3">Submit</button>

@@ -60,6 +60,22 @@ class Campaign(models.Model):
         total_donation = self.donation.aggregate(total_donation=Sum('donation'))['total_donation'] or 0.00
         return total_donation
 
+    @classmethod
+    def get_sepcific_object(cls, id):
+        return cls.objects.get(id=id)
+
+    @classmethod
+    def get_all_campaign(cls):
+        return cls.objects.all()
+
+
+# class Image(models.Model):
+#     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
+#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
+#
+#     def get_image_url(self):
+#         return f'/media/{self.image}'
+
 class Donation (models.Model):
     donation = models.DecimalField(max_digits=10,
                                     decimal_places=2 ,
@@ -112,7 +128,9 @@ class Rate(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
+    campaign = models.ForeignKey(
+        Campaign, default=None, on_delete=models.CASCADE, related_name="comments"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="comment")
     
@@ -135,7 +153,10 @@ class Comment_Report(models.Model):
     report =  models.CharField(
         max_length=200,
         choices=report_category,
-        default='1',
+        default="1",
+    )
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name="comment_report"
     )
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
 
