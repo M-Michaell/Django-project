@@ -4,14 +4,19 @@ from django.template import loader
 from django.urls import reverse_lazy ,reverse
 from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from decimal import Decimal
+from django.contrib.auth import authenticate, login
+
+
 from django.db.models import Sum, Count,Avg
 from django.views.generic import ListView ,DetailView
-from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,CreateCommentReportForm
+from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,CreateCommentReportForm,PasswordConfirmationForm
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
 from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.contrib.messages import add_message, constants as messages
+from django.contrib.auth.decorators import login_required
+from account.models import CustomUser django.contrib.messages import add_message, constants as messages
 
 
 
@@ -55,9 +60,12 @@ class CreateCategory(CreateView):
     success_url = reverse_lazy('project.home')
 
 
-# def getUser(request):
-#         user = Register.objects.get(id=request.session['user_id'])
-#         return user
+def getUser(request):
+        active_user_id = CustomUser.objects.get(id=request.session['user_id'])
+        return active_user_id
+
+
+@login_required(login_url='/account/login/') 
 def campaign_details(request, campaign_id):
     try:
         campaign = Campaign.objects.get(pk=campaign_id)
@@ -72,10 +80,15 @@ def campaign_details(request, campaign_id):
     rating = round(campaign.rate.aggregate(rate=Avg('rate'))['rate'] or 0.00 ,2)
     related_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()[:4]
     progress = (float(total_donation) / float(campaign.total_target)) * 100
+
+    # active_user_id=getUser(request)
     if Donation.objects.filter(campaign=campaign).last() :
         last_donation = Donation.objects.filter(campaign=campaign).last().created_at
     else:
         last_donation="no donations yet"
+    can_cancel=False
+    if progress < 25:
+        can_cancel=True
     
 
     # Initialize your forms
@@ -84,6 +97,7 @@ def campaign_details(request, campaign_id):
     report_form = CreateReportForm()
     comment_report_form =CreateCommentReportForm()
     create_rate =CreateRatingForm()
+    password_form = PasswordConfirmationForm()
 
     error_message = None
     context = {
@@ -106,6 +120,10 @@ def campaign_details(request, campaign_id):
     "rating" :rating,
     "error_message": error_message,
     "request": request,
+    'password_form': password_form,
+    'can_cancel':can_cancel
+    
+    # "active_user_id":active_user_id,
 
 }
 
@@ -127,7 +145,7 @@ def campaign_details(request, campaign_id):
                 donation.campaign = campaign
                 donation.user = request.user
                 donation.save()
-                add_message(request, messages.SUCCESS, "Your donation has been successfully processed.")
+                add_message(request, messages.SUCCESS, "Your donation has been successfully processed, Tkanks 🙏")
                 return redirect('campaign.details', campaign_id=campaign_id)
             else:
                 add_message(request, messages.ERROR, "Your donation should be geater than 5.")
@@ -170,10 +188,31 @@ def campaign_details(request, campaign_id):
                     rate.save()
                     add_message(request, messages.SUCCESS, "Your rating has been successfully added.")
                     return redirect('campaign.details', campaign_id=campaign_id)
+                
+
+            
+        elif 'cancel' in request.POST:
+            password_form = PasswordConfirmationForm(request.POST)
+            entered_password = request.POST.get('password', '')
+            user = request.user  # Get the current user
+
+            if user.check_password(entered_password):
+                # Password matches, delete the campaign
+                campaign.delete()
+                return redirect(reverse("project.home"))
+            else:
+                add_message(request, messages.ERROR, "password is incorrect")
+                return redirect('campaign.details', campaign_id=campaign_id)
+
 
 
 
     return render(request, 'project/details.html', context=context)
+
+
+
+
+
 
 
 
@@ -243,7 +282,6 @@ class CategoryDetailView(DetailView):
             context = super().get_context_data(**kwargs)
             context['campaigns'] = Campaign.objects.filter(category__id=self.object.id)
             return context
-
 
 #test image-------------------------------------------------------------------
 from django.views.generic.edit import FormView

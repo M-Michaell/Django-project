@@ -41,14 +41,14 @@ class Campaign(models.Model):
     def get_image_url(self):
         return f'/media/{self.image}'
 
-    def get_show_url(self):
+    def get_details(self):
         return reverse('campaign.details', args=[self.id])
 
     def get_edit_url(self):
         return reverse('project.editCampaign', args=[self.id])
 
-    def get_delete_url(self):
-        return reverse('project.deleteCampaign', args=[self.id])
+    def get_delete(self):
+        return reverse('campaign.delete', args=[self.id])
 
     @classmethod
     def get_sepcific_object(cls, id):
@@ -131,7 +131,7 @@ class Reply(models.Model):
 
 class Comment_Report(models.Model):
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="comment_report")
-    report_category=[("1","Flase Information"),
+    report_category=[("1","Flase Informa5.0tion"),
                   ("2","Violenece"),
                   ("3","Harassment"),
                   ("4","spam"),
