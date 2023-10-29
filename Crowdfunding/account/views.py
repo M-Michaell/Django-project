@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView,PasswordResetView
 
@@ -18,6 +19,7 @@ from django.utils.encoding import force_bytes
 from django.utils import timezone
 
 from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 
 from account.models import CustomUser
 from account.tokens import account_activation_token
@@ -46,16 +48,37 @@ class CustomRegistrationView(CreateView):
 
         user.save()
         current_site = get_current_site(self.request)
+        domain = current_site.domain
+
         mail_subject = 'Activate your blog account.'
-        message = render_to_string('account/acc_active_email.html', {
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        activation_url = reverse('activate', args=[uid, token])
+
+        message = f'''
+            Hi {user.username}, 
+
+            Please click on the link to confirm your registration:
+            {domain}{activation_url}
+
+            The activation link will be expired after 24 hours
+        '''
+
+        html_message = render_to_string('account/acc_active_email.html', {
+            'message': message,
             'user': user,
-            'domain': current_site.domain,
-            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
+            'domain': domain,
+            'uid': uid,
+            'token': token,
         })
+
         to_email = form.cleaned_data.get('email')
-        email = EmailMessage(mail_subject, message, to=[to_email])
+
+        email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+        email.attach_alternative(html_message, "text/html")
         email.send()
+
 
 
         self.extra_context = {'email': to_email}
