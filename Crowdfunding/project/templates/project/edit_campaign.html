@@ -6,7 +6,7 @@
 
 <form  method="post" enctype="multipart/form-data" class="m-4 border p-5 rounded-5 shadow bg-body-tertiary">
 {% csrf_token %}
-
+{#    {{ form.as_p }}#}
  <h3 class="mb-2 text-center">create new campaign</h3>
     <div class="fieldWrapper m-2 p-2">
                  <div class="fieldWrapper m-2">
@@ -58,7 +58,6 @@
                      {{ form.end_date  }}
                     {{ form.end_date.errors  }}
                 </div>
-
 
 </div>
 <button type="submit" class="btn btn-dark">Submit</button>

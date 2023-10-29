@@ -1,12 +1,8 @@
 from datetime import datetime
-
-from django import forms
+from django.core.exceptions import ValidationError
+from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
-
-
-
 from django import forms
-
 from project.models import Campaign, Category
 
 class CreateCampaignForm(forms.ModelForm):
@@ -50,41 +46,17 @@ class CreateCampaignForm(forms.ModelForm):
                 'class': 'form-control'
             }
         ))
+
     class Meta:
         model = Campaign
         fields = ['title', 'detail', 'total_target', 'tags', 'start_date', 'end_date', 'category', 'featured', 'image']
 
-        def clean(self):
-            cleaned_data = super().clean()
-            start_date = cleaned_data.get("start_date")
-            end_date = cleaned_data.get("end_date")
-            today_date = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S")
-
-            if today_date.date() > end_date.date():
-                msg = "End date should be greater than Current date [ Should be after today !]."
-                self._errors["end_time"] = self.error_class([msg])
-            else:
-                if end_date <= start_date:
-                    msg = "End date should be greater than start date."
-                    self._errors["end_time"] = self.error_class([msg])
 
 class CreateCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = '__all__'
         widgets = {}
-# class CreateTagForm(forms.ModelForm):
-#     class Meta:
-#         model = Tag
-#         fields = '__all__'
-#         widgets = {}
-
-# class CustomizedImageCreationForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Image
-#
-#         fields = '__all__'
 
 
 
@@ -138,3 +110,15 @@ class CreateDonationForm(forms.ModelForm):
     class Meta:
         model=Donation
         fields=('donation',)
+
+
+# test image ------------------------------------------------------------------
+
+from django import forms
+from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
+
+
+class UploadForm(forms.Form):
+    campaign = forms.ModelChoiceField(queryset=Campaign.objects.all())
+    attachments = MultiImageField(min_num=1, max_num=3, max_file_size=1024 * 1024 * 5)
+

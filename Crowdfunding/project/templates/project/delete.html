@@ -1,0 +1,12 @@
+{% extends 'project/layouts/base.html' %}
+
+{% block body %}
+  <h2>Confirm Campaign Deletion</h2>
+  <p>Are you sure you want to delete the campaign: <strong>{{ campaign.title }}</strong>?</p>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'project.list.all.campaign' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}
