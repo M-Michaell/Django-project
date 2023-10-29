@@ -1,0 +1,11 @@
+{% extends 'project/layouts/base.html' %} {% load static %} {% block title %}
+enhance {% endblock %} {% block body %}
+
+
+
+<div class="vh-100" style="margin: 100px;">
+    <h3>Email Not Fount </h3>
+    <a href="{% url 'account.login' %}">Try Again with valid email</a>
+</div>
+
+{% endblock %}

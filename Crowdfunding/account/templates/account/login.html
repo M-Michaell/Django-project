@@ -14,18 +14,18 @@ enhance {% endblock %} {% block body %}
 
             {% csrf_token %} 
             {% if form.errors %}
-    <div class="alert alert-danger" role="alert">
-        {% for field, errors in form.errors.items %}
-            <strong>{{ field|title }}:</strong>
-            <ul>
-                {% for error in errors %}
-                    
-                        <li>{{ error }}</li>
+            <div class="alert alert-danger" role="alert">
+                {% for field, errors in form.errors.items %}
+                    <strong>{{ field|title }}:</strong>
+                    <ul>
+                        {% for error in errors %}
+                            
+                                <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
                 {% endfor %}
-            </ul>
-        {% endfor %}
-    </div>
-{% endif %}
+            </div>
+          {% endif %}
             <div class="form-outline mb-4">
 
               {{ form.username }}
@@ -58,8 +58,10 @@ enhance {% endblock %} {% block body %}
             <button class="btn btn-primary btn-lg btn-block" type="submit">
               Login
             </button>
+          </form>
 
-            <hr class="my-4" />
+
+            <!-- <hr class="my-4" />
 
             <button
               class="btn btn-lg btn-block btn-primary"
@@ -73,15 +75,13 @@ enhance {% endblock %} {% block body %}
               style="background-color: #3b5998"
               type="submit"
             >
-              <i class="fab fa-facebook-f me-2"></i>Sign in with facebook
-            </button>
-              </form>
+              <i class="fab fa-facebook-f me-2"></i><a href="{% url 'social:begin' 'facebook' %}" class="text-light">Sign in with facebook</a>
+            </button> -->
           </div>
         </div>
       </div>
     </div>
   </div>
-</form>
 
 </section>
 

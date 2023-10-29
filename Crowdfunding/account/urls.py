@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path,include
 from account.views import CustomRegistrationView, CustomLoginView,CustomLogoutView,CustomEditAccountView,CustomDeleteAccountView,activate
 from account.views import CustomPasswordResetCompleteView,CustomPasswordResetConfirmView,CustomPasswordResetDoneView,CustomPasswordResetView,resend_activation
-from account.views import csrf_failure_redirect
+from account.views import csrf_failure_redirect,PasswordResetErrorView
 
 urlpatterns = [
     path('register/', CustomRegistrationView.as_view(), name='account.register'),
@@ -17,6 +17,10 @@ urlpatterns = [
     path('reset/done/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('resend_activation/<email>/', resend_activation, name='account.resend_activation'),
     path('csrf_failure/', csrf_failure_redirect, name='csrf_failure_redirect'),
+
+    path('social-auth/', include('social_django.urls', namespace='social')),
+    path('password_reset_error/', PasswordResetErrorView.as_view(), name='password_reset_error'),
+
 
 
 

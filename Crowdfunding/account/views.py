@@ -47,39 +47,20 @@ class CustomRegistrationView(CreateView):
         user.activation_timestamp = timezone.now() + timezone.timedelta(hours=24)
 
         user.save()
+
+
+
         current_site = get_current_site(self.request)
-        domain = current_site.domain
-
         mail_subject = 'Activate your blog account.'
-
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = account_activation_token.make_token(user)
-        activation_url = reverse('activate', args=[uid, token])
-
-        message = f'''
-            Hi {user.username}, 
-
-            Please click on the link to confirm your registration:
-            {domain}{activation_url}
-
-            The activation link will be expired after 24 hours
-        '''
-
-        html_message = render_to_string('account/acc_active_email.html', {
-            'message': message,
+        message = render_to_string('account/acc_active_email.html', {
             'user': user,
-            'domain': domain,
-            'uid': uid,
-            'token': token,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
         })
-
         to_email = form.cleaned_data.get('email')
-
-        email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
-        email.attach_alternative(html_message, "text/html")
+        email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
-
-
 
         self.extra_context = {'email': to_email}
         
@@ -207,11 +188,30 @@ class CustomLogoutView(LogoutView):
     next_page = reverse_lazy('account.login') 
 
 
+from django.http import Http404
+from django.contrib.auth.forms import PasswordResetForm
 
 
-class CustomPasswordResetView(PasswordResetView) :
-    template_name='account/resetPass.html'
-    pass
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'account/resetPass.html'
+    form_class = PasswordResetForm
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        users = self.get_users(email)
+
+        if not users:
+            return redirect(reverse_lazy('password_reset_error'))
+
+        return super().form_valid(form)
+
+    def get_users(self, email):
+        # Your custom logic to retrieve users by email
+        # For example:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        return User.objects.filter(email=email)
+    
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView) :
     template_name='account/completeResetPass.html'
@@ -228,7 +228,10 @@ class CustomPasswordResetDoneView(PasswordResetDoneView) :
     pass
 
 
+from django.views.generic import TemplateView
 
+class PasswordResetErrorView(TemplateView):
+    template_name = 'account/email_not_found.html'
 
 
 def csrf_failure_redirect(request, reason="CSRF verification failed. Request aborted."):
