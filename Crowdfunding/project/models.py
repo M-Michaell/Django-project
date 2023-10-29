@@ -13,15 +13,7 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-# class Tag(models.Model):
-#     name = models.CharField(max_length=50)
-#     def __str__(self):
-#         return f'{self.name}'
 
-# class Tag(models.Model):
-#     name = models.CharField(max_length=50)
-#     def __str__(self):
-#         return f'{self.name}'
 
 
 class Campaign(models.Model):
@@ -99,20 +91,20 @@ class Rate(models.Model):
 
     rate = models.IntegerField(choices=RATE_CHOICES, default=1)
     campaign = models.ForeignKey('Campaign', on_delete=models.CASCADE, related_name='rate')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rate')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='rate')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.username} rated {self.campaign.title} with {self.rate} stars"
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='project/images/', null=True, blank=True )
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
+# class Image(models.Model):
+#     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
+#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
 
     
-    def get_image_url(self):
-        return f'/media/{self.image}'
+    # def get_image_url(self):
+    #     return f'/media/{self.image}'
 
 
 class Comment(models.Model):

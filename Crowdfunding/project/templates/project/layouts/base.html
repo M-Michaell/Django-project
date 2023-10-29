@@ -1,180 +1,140 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %} {% endblock %}</title>
-    <link
-      rel="stylesheet"
-      href="{% static 'project/bootstrap/css/bootstrap.css'%}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'project/bootstrap/css/bootstrap.min.css'%}"
-    />
-    <link rel="stylesheet" href="{% static 'project/style/base.css'%}" />
-    <link rel="stylesheet" href="{% static 'project/mdb/css/mdb.min.css'%}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <style>
-      li {
-        color: red;
-      }
 
-      .text-truncate {
-        max-width: 350px;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %} {% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.css'%}" />
+  <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.min.css'%}" />
+  <link rel="stylesheet" href="{% static 'project/style/base.css'%}" />
+  <link rel="stylesheet" href="{% static 'project/mdb/css/mdb.min.css'%}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    li {
+      color: red;
+    }
 
-  <body style="position: relative">
-    <div style="position: relative; min-height: 90vh">
-      <header>
-        <nav class="navbar navbar-expand-lg navbar-light px-5">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="{%url 'project.home'%}">Enhance</a>
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    .text-truncate {
+      max-width: 350px;
+    }
+  </style>
+</head>
+
+<body style="position: relative">
+  <div style="position: relative; min-height: 90vh">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light px-5">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{%url 'project.home'%}">Enhance</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="">Products</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="">Categories</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">about me</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Categories
+                </a>
+                <ul class="dropdown-menu">
+                  {% for category in categories %}
+                  <li>
+                    <a class="dropdown-item" href="{% url 'category_detail' category.id %}">
+                      {{ category.name }}
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            </ul>
+            <form action="{% url 'project.search' %}" method="GET" onsubmit="return validateSearch()">
+              <div class="input-group">
+                <input class="form-control" type="search" name="q" placeholder="Search by title or tag"
+                  aria-label="Search" required />
+
+
+
+                <div class="input-group-append">
+
+
+                  <button class="btn btn-outline-success" type="submit">
+
+
+                    <i class="fas fa-search"></i>
+
+
+                  </button>
+
+
+                </div>
+              </div>
+
+              <script>
+                function validateSearch() {
+                  var q = document.getElementById("q").value;
+                  if (q === "") {
+                    alert("Please enter a search query.");
+                    return false;
+                  }
+
+                  return true;
+                }
+              </script>
+            </form>
+            {% if user.id %}
+            <div class="d-flex mx-3 my-auto">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href=""
-                    >Products</a
-                  >
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="">Categories</a>
+                  <a class="nav-link" href="">{{user.username}}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">about me</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    Categories
-                  </a>
-                  <ul class="dropdown-menu">
-                    {% for category in categories %}
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        href="{% url 'category_detail' category.id %}"
-                      >
-                        {{ category.name }}
-                      </a>
-                    </li>
-                    {% endfor %}
-                  </ul>
+                  <a class="nav-link" href="">logout</a>
                 </li>
               </ul>
-              <form action="{% url 'project.search' %}" method="GET" onsubmit="return validateSearch()">
-                <div class="input-group">
-                    <input
-                        class="form-control"
-                        type="search"
-                        name="q"
-                        placeholder="Search by title or tag"
-                        aria-label="Search"
-                        required
-                    />
-            
-            
-                    
-            <div
-             
-            class="input-group-append">
-            
-                        
-            <button
-             
-            class="btn btn-outline-success"
-             
-            type="submit">
-            
-                            
-            <i
-             
-            class="fas fa-search"></i>
-            
-                        
-            </button>
-            
-                    
             </div>
-                </div>
-            
-                <script>
-                    function validateSearch() {
-                        var q = document.getElementById("q").value;
-                        if (q === "") {
-                            alert("Please enter a search query.");
-                            return false;
-                        }
-            
-                        return true;
-                    }
-                </script>
-            </form>
-              {% if user.id %}
-              <div class="d-flex mx-3 my-auto">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link" href="">{{user.username}}</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="">logout</a>
-                  </li>
-                </ul>
-              </div>
-              {% else %}
-              <div class="d-flex mx-3 my-auto">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link" href="">Register</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="">login</a>
-                  </li>
-                </ul>
-              </div>
-              {% endif %}
+            {% else %}
+            <div class="d-flex mx-3 my-auto">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="">Register</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="">login</a>
+                </li>
+              </ul>
             </div>
+            {% endif %}
           </div>
-        </nav>
-      </header>
+        </div>
+      </nav>
+    </header>
 
-      <div>{% block body %} {% endblock %} {% block show %} {% endblock %}</div>
-    </div>
-    <!-- {%for category in categories%} -->
+    <div>{% block body %} {% endblock %} {% block show %} {% endblock %}</div>
+  </div>
+  <!-- {%for category in categories%} -->
 
-    <!-- {% endfor %} -->
-    <footer
-      class="mt-5 fs-5 bg-warning p-auto"
-      style="text-align: center; height: 50px; position: relative; top: 100"
-    >
-      <p class="my-auto">copyrights@noon-noon.com</p>
-    </footer>
-    <script src="{% static 'project/bootstrap/js/bootstrap.js'%}"></script>
-    <script src="{% static 'project/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <!-- {% endfor %} -->
+  <footer class="mt-5 fs-5 bg-warning p-auto" style="text-align: center; height: 50px; position: relative; top: 100">
+    <p class="my-auto">copyrights@noon-noon.com</p>
+  </footer>
+  <script src="{% static 'project/bootstrap/js/bootstrap.js'%}"></script>
+  <script src="{% static 'project/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
 
-    <script src="{% static 'project/js/script.js' %}"></script>
-    <script src="{% static 'project/mdb/js/mdb.min.js'%}"></script>
-  </body>
+  <script src="{% static 'project/js/script.js' %}"></script>
+  <script src="{% static 'project/mdb/js/mdb.min.js'%}"></script>
+</body>
+
 </html>

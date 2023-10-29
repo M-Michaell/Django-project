@@ -15,12 +15,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 
 
+
+
 #
 # # Create your views here.
-class ListAllCampaign(ListView):
-    model = Campaign
-    template_name = 'project/list_all_campaign.html'
-    context_object_name = 'campaigns'
+# class ListAllCampaign(ListView):
+#     model = Campaign
+#     template_name = 'project/list_all_campaign.html'
+#     context_object_name = 'campaigns'
 
 
 class CreateCampaign(LoginRequiredMixin,CreateView):
@@ -40,20 +42,20 @@ class CreateCategory(CreateView):
     success_url = reverse_lazy('project.home')
 
 
-class CreateTag(CreateView):
-    model = Tag
-    template_name = 'project/create_tag.html'
-    form_class = CreateTagForm
-    success_url = reverse_lazy('project.createCampaign')
+# class CreateTag(CreateView):
+#     model = Tag
+#     template_name = 'project/create_tag.html'
+#     form_class = CreateTagForm
+#     success_url = reverse_lazy('project.createCampaign')
 
-    def form_valid(self, form):
-        # Determine which button was clicked
-        if 'save_button' in self.request.POST:
-            self.success_url = reverse_lazy('project.createCampaign')
-        elif 'other_button' in self.request.POST:
-            self.success_url = reverse_lazy('project.createTag')
+#     def form_valid(self, form):
+#         # Determine which button was clicked
+#         if 'save_button' in self.request.POST:
+#             self.success_url = reverse_lazy('project.createCampaign')
+#         elif 'other_button' in self.request.POST:
+#             self.success_url = reverse_lazy('project.createTag')
 
-        return super().form_valid(form)
+#         return super().form_valid(form)
 
 
 from django.contrib.messages import add_message, constants as messages
@@ -95,8 +97,8 @@ def campaign_details(request, campaign_id):
     'comments': comments,
     'tags': tags,
     'rating_width': rating * 20,
-    'f_image': images_all[0],
-    'images': images_all[1:],
+    # 'f_image': images_all[0],
+    # 'images': images_all[1:],
     'related_campaigns': related_campaigns,
     "progress": progress,
     'comment_form': comment_form,
@@ -231,8 +233,3 @@ class CategoryDetailView(DetailView):
             context['campaigns'] = Campaign.objects.filter(category__id=self.object.id)
             return context
     
-
-class ListAllCategories(ListView):
-    model = Category
-    template_name = 'project/category_detail.html'
-    context_object_name = 'categories'
