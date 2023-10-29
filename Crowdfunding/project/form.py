@@ -2,6 +2,9 @@ from datetime import datetime
 from django.core.exceptions import ValidationError
 from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
+from django.contrib.auth.forms import AuthenticationForm
+
+
 from django import forms
 from project.models import Campaign, Category
 
@@ -110,6 +113,13 @@ class CreateDonationForm(forms.ModelForm):
     class Meta:
         model=Donation
         fields=('donation',)
+
+
+class PasswordConfirmationForm(AuthenticationForm):
+    password = forms.CharField(
+        label="Enter your password to confirm",
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}),
+    )
 
 
 # test image ------------------------------------------------------------------

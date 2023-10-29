@@ -96,10 +96,15 @@ class CustomLoginView(LoginView):
     authentication_form = MyAuthenticationForm
     template_name = 'account/login.html'
 
-
     def get_success_url(self):
-        return reverse_lazy('account.home')
-
+        # Check if the user is authenticated
+        next_url = self.request.GET.get('next', None)
+        if next_url:
+            # If not logged in, check if 'next' is specified and valid
+            if next_url and next_url.startswith('/details/'):
+                return next_url
+            else:
+                return reverse_lazy('account.home')
 
 class DeleteAccountView(DeleteView):
     model = CustomUser

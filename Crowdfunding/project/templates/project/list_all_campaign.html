@@ -6,7 +6,7 @@
     {% for camp in campaigns %}
        <div class="col-3 m-4">
           <a href="{% if user.is_authenticated %}
-                    {{ camp.get_show_url }}
+                    {{ camp.get_details }}
                     {% else %}
                     {% url 'account.login' %}?next={{ camp.get_details }}
                     {% endif %}">
