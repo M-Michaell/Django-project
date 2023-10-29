@@ -3,10 +3,12 @@
 {% block title %} Campaign Search {% endblock %}
 
 {% block body %}
-<div id="no-search-results-background" style="width: 100%; height: 100%; background-image: url('/media/project/images/featured_bg.avif');"; background-size: cover; background-repeat: no-repeat;">
 
-<h1>No search results found</h1>
-
-<p>Please try a different search query.</p>
+<div id="no-search-results-background" style="position: relative; width: 100%; height: 1000px; background-image: url('/static/project/images/3vc0.gif'); 
+background-size: cover; background-repeat: no-repeat;">
+    <div class="text-content text-danger" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(255, 255, 255, 0.7); padding: 20px; text-align: center;">
+        <h1>No search results found for "{{ search_term }}"</h1>
+        <p>Please try a different search query.</p>
+    </div>
 </div>
 {% endblock %}

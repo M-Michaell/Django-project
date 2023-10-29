@@ -18,7 +18,6 @@ urlpatterns = [
     path('latest/', latest, name="project.latest"),
     path('searchResults/', search, name="project.search"),
     path('category/<int:pk>', CategoryDetailView.as_view(), name='category_detail'),
-    path('nosearchResults/', search, name="project.nosearchresults"),
     path('profile/', profile, name="project.profile"),
     path('<int:pk>/delete', login_required(DeleteCampaign.as_view()), name="project.deleteCampaign"),
     path('<int:pk>/edit', login_required(EditCampaign.as_view()), name="project.editCampaign"),

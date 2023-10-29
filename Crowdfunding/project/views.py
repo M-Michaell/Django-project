@@ -246,15 +246,14 @@ class CreateDonation(CreateView):
 
 
 
-def home(request):
-    return render(request, 'project/home.html')
-
 
 
 def home(request):
     featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
     latest = Campaign.objects.all().order_by('-created_at')[:5]
-    return render(request, 'project/home.html', context = {"featured": featured, "latest": latest})
+    campaigns = Campaign.objects.annotate(average_rating=Avg('rate__rate'))
+    top_rated_campaigns = campaigns.order_by('-average_rating')[:5]
+    return render(request, 'project/home.html', context = {"featured": featured, "latest": latest, 'top_rated_campaigns': top_rated_campaigns})
 
 
 def featured(request):
@@ -265,19 +264,19 @@ def latest(request):
         latest = Campaign.objects.all().order_by('-created_at')[:5]
         return render(request, 'project/latest.html', context = {"latest": latest})
 
-
+###############bug################
 def search(request):
-  q = request.GET.get("q", "")
-  campaignList = Campaign.objects.filter(
-      Q(title__icontains=q) | Q(tags__name__icontains=q)
-  )
+    q = request.GET.get("q", "")
+    campaigns = Campaign.objects.filter(
+        Q(title__icontains=q) | Q(tags__name__icontains=q)
+    ).distinct()  # Use distinct() to ensure unique results
 
-  if not campaignList:
-    # Redirect to a page with no search results found
-    return render(request, "project/no_search_results.html")
+    if not campaigns:
+        # Redirect to a page with no search results found
+        return render(request, "project/no_search_results.html", context={"search_term":q})
 
+    return render(request, "project/search.html", context={"campaignList": campaigns, "search_term":q})
 
-  return render(request, "project/search.html", context={"campaignList": campaignList})
 
 class CategoryDetailView(DetailView):
     model = Category
