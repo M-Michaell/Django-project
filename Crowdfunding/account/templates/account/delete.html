@@ -1,8 +1,5 @@
-{% extends 'account/layout/base.html' %}
-{% load static %}
-
-
-{% block content %}
+{% extends 'project/layouts/base.html' %} {% load static %} {% block title %}
+enhance {% endblock %} {% block body %}
 <div style="margin: 100px;">
     
     <h1>Delete Confirmation</h1>
@@ -15,8 +12,9 @@
             {{form.password}}
         </div>
 
-        <button type="submit">Delete</button>
-        <a href="{% url 'account.edit' %}">Cancel</a>
+        <button type="submit" class="bg-danger text-white me-2 mt-3" style="border-radius: 5px; ">Delete</button>
+        <a href="{% url 'account.edit' %}" class="bg-info text-white" style="border-radius: 5px; width: 70px; height: 40px; text-align: center; justify-content: center; align-items: center; padding: 7px; margin-top: 15px ;">Cancel</a>
+
     </form>
 
 

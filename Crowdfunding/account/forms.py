@@ -4,6 +4,49 @@ from account.models import CustomUser
 import re
 
 class MyUserCreationForm(UserCreationForm):
+
+    username = forms.CharField(
+    widget=forms.TextInput(
+        attrs={
+            "placeholder": "Name",
+            "class": "form-control"
+        }
+    ))
+    
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "First Name",
+                "class": "form-control"
+            }
+        ))
+    
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Last Name",
+                "class": "form-control"
+            }
+        ))
+    
+    phone = forms.IntegerField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Egyption Phone Number",
+                "class": "form-control"
+            }
+        ))
+    
+    email = forms.EmailField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Email",
+                "class": "form-control"
+            }
+        ))
+    
+    
+    
     class Meta:
         model = CustomUser
         fields = [
@@ -29,6 +72,84 @@ class MyUserCreationForm(UserCreationForm):
 
 
 class CustomEditAccountForm(forms.ModelForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Name",
+                "class": "form-control",
+                
+            }
+        ))
+    
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "First Name",
+                "class": "form-control",
+                
+
+            }
+        ))
+    
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Last Name",
+                "class": "form-control",
+                
+
+            }
+        ))
+    
+    phone = forms.CharField(
+        max_length=11,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Egyption Phone Number",
+                "class": "form-control",
+                
+
+            }
+        ))
+    
+    birthDate = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',  
+                'class': 'col-2 d-block'
+            }
+        )
+    )
+    
+    facebookProfile = forms.URLField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Facebook Account",
+                "class": "form-control",
+                
+
+            }
+        ))
+    
+    country = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Country",
+                "class": "form-control",
+            }
+        ))
+    
+    image = forms.FileField(
+        required=False
+    )
+    
+    
+    
+    
     class Meta:
         model = CustomUser
         fields = [
@@ -55,6 +176,13 @@ class CustomEditAccountForm(forms.ModelForm):
 
 class MyAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(widget=forms.TextInput(attrs={'autofocus': True}))
+
+    error_messages = {
+        'invalid_login':(
+            "Please enter a correct email and password. Note that both fields may be case-sensitive."
+        ),
+        'inactive':("This account is inactive."),
+    }
 
 
 

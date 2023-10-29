@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'taggit',
     'account.apps.AccountConfig',
+    'fontawesomefree',
 ]
 
 MIDDLEWARE = [

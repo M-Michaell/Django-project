@@ -193,7 +193,13 @@ class CreateDonation(CreateView):
 ###
 
 def profile(request):
-    return render(request, template_name='project/profile.html')
+    user_id = request.user.id
+    user_donation = Donation.objects.filter(user_id=user_id)
+    user_campaign = Campaign.objects.filter(user_id=user_id)
+    return render(request, template_name='project/profile.html', 
+    context = {
+    'user_donation': user_donation,
+    'user_campaign': user_campaign})
 
 ####
 def home(request):
