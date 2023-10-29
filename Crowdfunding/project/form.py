@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django import forms
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
-
+from django.contrib.auth.forms import AuthenticationForm
 
 
 from django import forms
@@ -138,3 +138,10 @@ class CreateDonationForm(forms.ModelForm):
     class Meta:
         model=Donation
         fields=('donation',)
+
+
+class PasswordConfirmationForm(AuthenticationForm):
+    class Meta:
+        widgets = {
+            'password': forms.PasswordInput(attrs={'placeholder': 'Password','class': 'form-control'}),
+        }

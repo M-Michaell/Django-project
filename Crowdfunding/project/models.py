@@ -38,14 +38,14 @@ class Campaign(models.Model):
     def get_image_url(self):
         return f'/media/{self.image}'
 
-    def get_show_url(self):
-        return reverse('posts.details', args=[self.id])
+    def get_details(self):
+        return reverse('campaign.details', args=[self.id])
 
     def get_edit_url(self):
         return reverse('posts.edit', args=[self.id])
 
-    def get_delete_url(self):
-        return reverse('posts.delete', args=[self.id])
+    def get_delete(self):
+        return reverse('campaign.delete', args=[self.id])
 
 
 
