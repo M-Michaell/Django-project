@@ -107,7 +107,7 @@ class CreateCommentReportForm(forms.ModelForm):
 class CreateReplyForm(forms.ModelForm):
     class Meta:
         model=Reply
-        fields='__all__'
+        fields=("reply",)
 
         
 class CreateDonationForm(forms.ModelForm):
