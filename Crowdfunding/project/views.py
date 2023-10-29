@@ -317,6 +317,3 @@ class UploadView(FormView):
                 campaign=campaign
             )
         return redirect(reverse('project.list.all.campaign'))
-
-
-
