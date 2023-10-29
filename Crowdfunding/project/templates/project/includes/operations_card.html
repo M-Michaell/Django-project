@@ -59,8 +59,10 @@
             </span>
             <span class="mx-3"> {{rating}}/5 </span>
         </div>
-        <div class="">
-            <p class="fs-5">{{donation_count}} donations</p>
+        <div class="text-center">
+            <hr>
+            <p class="fs-5">{{donation_count}} donations untill now</p>
+            <hr>
         </div>
 
         <h5 class="card-title"></h5>
@@ -71,7 +73,7 @@
             Donate now
         </a>
         <div class="collapse" id="donationFormCollapse">
-            <form method="post">
+            <form method="post" class="form-control  bg-body-secondary">
                 {% csrf_token %} {{ donation_form.as_p }}
                 <button type="submit" name="donation_submit" class="btn btn-dark">
                     Donate
@@ -89,7 +91,7 @@
                 Rate this project
             </a>
             <div class="collapse" id="RateFormCollapse">
-                <form method="post">
+                <form method="post" class="form-control  bg-body-secondary">
                     {% csrf_token %} {{ create_rate.as_p }}
                     <button type="submit" name="rate_submit" class="btn btn-dark">
                         Rate
@@ -103,7 +105,7 @@
                     Report this Campaign
                 </a>
                 <div class="collapse" id="collapseExample">
-                    <form method="post">
+                    <form method="post" class="form-control  bg-body-secondary">
                         {% csrf_token %} {{ report_form.as_p }}
 
                         <button type="submit" name="report_submit" class="btn btn-dark">
@@ -121,10 +123,12 @@
                     Cancel this Campaign
                 </a>
                 <div class="collapse" id="collapseCancel">
-                    <form method="post">
+                    <form method="post" class="form-control  bg-body-secondary">
                         {% csrf_token %}
+                        <div>
 
-                        {{ password_form.password.label_tag }}
+                            {{ password_form.password.label_tag }}
+                        </div>
 
                         {{ password_form.password }}
 

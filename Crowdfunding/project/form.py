@@ -141,7 +141,7 @@ class CreateDonationForm(forms.ModelForm):
 
 
 class PasswordConfirmationForm(AuthenticationForm):
-    class Meta:
-        widgets = {
-            'password': forms.PasswordInput(attrs={'placeholder': 'Password','class': 'form-control'}),
-        }
+    password = forms.CharField(
+        label="Enter your password to confirm",
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}),
+    )

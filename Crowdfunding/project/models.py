@@ -122,7 +122,7 @@ class Reply(models.Model):
 
 class Comment_Report(models.Model):
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="comment_report")
-    report_category=[("1","Flase Information"),
+    report_category=[("1","Flase Informa5.0tion"),
                   ("2","Violenece"),
                   ("3","Harassment"),
                   ("4","spam"),

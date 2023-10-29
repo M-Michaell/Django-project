@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from decimal import Decimal
 from django.contrib.auth import authenticate, login
 
+
 from django.db.models import Sum, Count,Avg
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView ,DetailView
@@ -146,7 +147,7 @@ def campaign_details(request, campaign_id):
                 donation.campaign = campaign
                 donation.user = request.user
                 donation.save()
-                add_message(request, messages.SUCCESS, "Your donation has been successfully processed.")
+                add_message(request, messages.SUCCESS, "Your donation has been successfully processed, Tkanks 🙏")
                 return redirect('campaign.details', campaign_id=campaign_id)
             else:
                 add_message(request, messages.ERROR, "Your donation should be geater than 5.")
@@ -176,7 +177,7 @@ def campaign_details(request, campaign_id):
             
 
         elif 'rate_submit' in request.POST:
-            password_form = CreateRatingForm(request.POST)
+            create_rate = CreateRatingForm(request.POST)
             if create_rate.is_valid():
                 user_rating = Rate.objects.filter(campaign=campaign, user=request.user).first()
 
@@ -202,7 +203,7 @@ def campaign_details(request, campaign_id):
                 campaign.delete()
                 return redirect(reverse("project.home"))
             else:
-                add_message(request, messages.ERROR, "Entered password is incorrect")
+                add_message(request, messages.ERROR, "password is incorrect")
                 return redirect('campaign.details', campaign_id=campaign_id)
 
 
@@ -229,7 +230,11 @@ class CreateDonation(CreateView):
 ###
 
 def profile(request):
-    return render(request, template_name='project/profile.html')
+    # Assuming you have a way to identify the user, replace 'user_id' with the actual user identifier.
+    user_id = request.user.id  # Replace with the user's actual ID or the way you identify the user.
+    user_donations = Donation.objects.filter(user_id=user_id)
+    
+    return render(request, 'project/profile.html', {'user_donations': user_donations})
 
 ####
 def home(request):
