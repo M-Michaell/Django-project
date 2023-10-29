@@ -10,7 +10,8 @@ from project.views import CreateCampaign,  CreateCategory, home, featured, lates
 urlpatterns = [
     path('list_all/', ListAllCampaign.as_view(), name="project.list.all.campaign"),
     path('craete_category/', CreateCategory.as_view(), name="project.createCategory"),
-    path('craete_campaign/',CreateCampaign.as_view(), name="project.createCampaign"),
+
+    path('craete_campaign/',login_required(CreateCampaign.as_view()), name="project.createCampaign"),
     path('details/<int:campaign_id>', campaign_details , name="campaign.details"),
     path('', home, name = 'project.home'),
     path('featured/', featured, name="project.featured"),

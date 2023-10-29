@@ -27,8 +27,7 @@ class ListAllCampaign(ListView):
     template_name = 'project/list_all_campaign.html'
     context_object_name = 'campaigns'
 
-
-class CreateCampaign(LoginRequiredMixin,CreateView):
+class CreateCampaign(CreateView):
     model = Campaign
     template_name = 'project/create_campaign.html'
     form_class = CreateCampaignForm
@@ -248,14 +247,7 @@ class CreateDonation(CreateView):
 
 
 
-def profile(request):
-    # Assuming you have a way to identify the user, replace 'user_id' with the actual user identifier.
-    user_id = request.user.id  # Replace with the user's actual ID or the way you identify the user.
-    user_donations = Donation.objects.filter(user_id=user_id)
-    
-    return render(request, 'project/profile.html', {'user_donations': user_donations})
 
-####
 def home(request):
     featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
     latest = Campaign.objects.all().order_by('-created_at')[:5]
@@ -319,3 +311,14 @@ class UploadView(FormView):
 
 
 
+
+
+
+def profile(request):
+    user_id = request.user.id
+    user_donation = Donation.objects.filter(user_id=user_id)
+    user_campaign = Campaign.objects.filter(user_id=user_id)
+    return render(request, template_name='project/profile.html', 
+    context = {
+    'user_donation': user_donation,
+    'user_campaign': user_campaign})

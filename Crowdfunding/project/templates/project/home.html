@@ -142,6 +142,10 @@ Home {% endblock %} {% block body %}
 </div>
 
 <div class="text-center mt-5">
+  {% if user.id %}
   <a class="btn btn-dark mt-3" href="{% url 'project.createCampaign' %}" role="button">Create a New Project</a>
+  {% else %}
+  <a class="btn btn-dark mt-3" href="{% url 'account.login' %}" role="button">Create a New Project</a>
+  {% endif %}
 </div>
 {% endblock %}

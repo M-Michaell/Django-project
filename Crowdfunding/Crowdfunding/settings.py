@@ -171,7 +171,9 @@ CSRF_FAILURE_VIEW = 'account.views.csrf_failure_redirect'
 #     'social_core.backends.facebook.FacebookOAuth2',
 #     'django.contrib.auth.backends.ModelBackend',
 # ]
-LOGIN_URL = 'account/login'
+# LOGIN_URL = 'account/login'
+LOGIN_URL = 'craete_campaign/account/login'
+
 LOGIN_REDIRECT_URL = 'project/home'
 LOGOUT_URL = 'account/logout'
 LOGOUT_REDIRECT_URL = 'account/login'
