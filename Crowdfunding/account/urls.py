@@ -19,7 +19,7 @@ urlpatterns = [
     path('resend_activation/<email>/', resend_activation, name='account.resend_activation'),
     path('csrf_failure/', csrf_failure_redirect, name='csrf_failure_redirect'),
 
-    path('social-auth/', include('social_django.urls', namespace='social')),
+    # path('social-auth/', include('social_django.urls', namespace='social')),
     path('password_reset_error/', PasswordResetErrorView.as_view(), name='password_reset_error'),
 
 
