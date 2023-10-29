@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <meta http-equiv="refresh" content="4;url=http://127.0.0.1:8000/">
+    </head>
+    <body>
+        <div style="margin: 100px;">
+            <p style="font-size: 20px;">Thank you for joining our CrowdFunding Website, Redirecting in ... <span id="countdown">5</span> seconds...</p>
+        </div>
+        <script>
+            var seconds = 4;
+            function updateCountdown() {{
+                document.getElementById("countdown").textContent = seconds;
+                seconds--;
+                if (seconds < 0) {{
+                    location.href = "http://127.0.0.1:8000/";
+                }}
+            }}
+            setInterval(updateCountdown, 1000);
+        </script>
+    </body>
+    </html>

@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from taggit.managers import TaggableManager
 from django.core.exceptions import ValidationError
+from django.db.models import Sum, Count,Avg
 
 
 # Create your models here.
@@ -49,6 +50,15 @@ class Campaign(models.Model):
 
     def get_delete(self):
         return reverse('campaign.delete', args=[self.id])
+    
+    def get_progress(self):
+        total_donation = self.donation.aggregate(total_donation=Sum('donation'))['total_donation'] or 0.00
+        progress = (float(total_donation) / float(self.total_target)) * 100
+        return progress
+    
+    def get_total_deonation(self):
+        total_donation = self.donation.aggregate(total_donation=Sum('donation'))['total_donation'] or 0.00
+        return total_donation
 
     @classmethod
     def get_sepcific_object(cls, id):
@@ -118,7 +128,9 @@ class Rate(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
+    campaign = models.ForeignKey(
+        Campaign, default=None, on_delete=models.CASCADE, related_name="comments"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="comment")
     
@@ -131,7 +143,7 @@ class Reply(models.Model):
 
 class Comment_Report(models.Model):
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="comment_report")
-    report_category=[("1","Flase Informa5.0tion"),
+    report_category=[("1","Flase Information"),
                   ("2","Violenece"),
                   ("3","Harassment"),
                   ("4","spam"),
@@ -141,7 +153,10 @@ class Comment_Report(models.Model):
     report =  models.CharField(
         max_length=200,
         choices=report_category,
-        default='1',
+        default="1",
+    )
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name="comment_report"
     )
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
 
@@ -151,3 +166,6 @@ class Comment_Report(models.Model):
 class Attachment(models.Model):
     image = models.ImageField(upload_to='project/images',null=False, blank=False)
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
+
+    def get_image_url(self):
+        return f'/media/{self.image}'

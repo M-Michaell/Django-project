@@ -1,84 +1,97 @@
 {% extends 'project/layouts/base.html' %} {% load static %} {% block title %}
 enhance {% endblock %} {% block body %}
-<div>
-</div>
+<div></div>
 <div class="d-flex">
   <div class="container" style="margin: 100px">
-    <h2 style="padding-left: 25%;">Edit Profile</h2>
-<div>
-    <form method="post" class="m-5" enctype="multipart/form-data">
-      {% csrf_token %} {% if form.errors %}
-      <div class="alert alert-danger" role="alert">
-        {% for field, errors in form.errors.items %}
-        <strong>{{ field|title }}:</strong>
-        <ul>
-          {% for error in errors %}
-          <li>{{ error }}</li>
+    <h2 style="padding-left: 25%">Edit Profile</h2>
+    <div>
+      <form method="post" class="m-5" enctype="multipart/form-data">
+        {% csrf_token %} {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for field, errors in form.errors.items %}
+          <strong>{{ field|title }}:</strong>
+          <ul>
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
           {% endfor %}
-        </ul>
-        {% endfor %}
-      </div>
-      {% endif %}
+        </div>
+        {% endif %}
 
-      <div class="row p-3">
-        <label class="col-3" for="id_username">Email :</label>
-        <div class="col-5">{{ user.email }}</div>
-      </div>
+        <div class="row p-3">
+          <label class="col-3" for="id_username">Email :</label>
+          <div class="col-5">{{ user.email }}</div>
+        </div>
 
-      <div class="row p-3">
-        <label class="col-3" for="id_username">Visible Name :</label>
-        <div class="col-5">{{ form.username }}</div>
-      </div>
+        <div class="row p-3">
+          <label class="col-3" for="id_username">Visible Name :</label>
+          <div class="col-5">{{ form.username }}</div>
+        </div>
 
-      <div class="row p-3">
-        <label class="col-3" for="id_first_name">First Name:</label>
-        <div class="col-5">{{ form.first_name }}</div>
-      </div>
+        <div class="row p-3">
+          <label class="col-3" for="id_first_name">First Name:</label>
+          <div class="col-5">{{ form.first_name }}</div>
+        </div>
 
-      <div class="row p-3">
-        <label class="col-3" for="id_last_name">Last Name:</label>
-        <div class="col-5">{{ form.last_name }}</div>
-      </div>
+        <div class="row p-3">
+          <label class="col-3" for="id_last_name">Last Name:</label>
+          <div class="col-5">{{ form.last_name }}</div>
+        </div>
 
-      <div class="row p-3">
-        <label class="col-3" for="id_last_name">Mobile Number:</label>
-        <div class="col-5">{{ form.phone }}</div>
-      </div>
+        <div class="row p-3">
+          <label class="col-3" for="id_last_name">Mobile Number:</label>
+          <div class="col-5">{{ form.phone }}</div>
+        </div>
 
-      
-      <div class="row p-3">
-        <div class="col-3">{{ form.birthDate.label_tag }}</div>
-        <div class="col-5">{{ form.birthDate }} </div>
-      </div>
+        <div class="row p-3">
+          <div class="col-3">{{ form.birthDate.label_tag }}</div>
+          <div class="col-5">{{ form.birthDate }}</div>
+        </div>
 
-      
+        <div class="row p-3">
+          <label class="col-3" for="id_last_name">FaceBook:</label>
+          <div class="col-5">{{ form.facebookProfile }}</div>
+        </div>
 
-      <div class="row p-3">
-        <label class="col-3" for="id_last_name">FaceBook:</label>
-        <div class="col-5">{{ form.facebookProfile }}</div>
-      </div>
+        <div class="row p-3">
+          <label class="col-3" for="id_last_name">Country:</label>
+          <div class="col-5">{{ form.country }}</div>
+        </div>
 
-      <div class="row p-3">
-        <label class="col-3" for="id_last_name">Country:</label>
-        <div class="col-5">{{ form.country }}</div>
-      </div>
-      
         <div class="d-flex">
-  <p>Personal Picture:</p>
-  <div class="w-40 m-3">
-        <div class="form-control edit_image_container " style="margin-right: 30%;">{{ form.image }}</div>
+          
+            <label class="col-3" >Personal Picture:</label>
+          <div class="w-40 m-3 col-5">
+            <div
+              class="form-control "
+              style="margin-right: 30%"
+            >
+              {{ form.image }}
+            </div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <button type="submit" class="btn btn-primary m-3">Update</button>
+          <a
+            href="{{user.get_delete_url}}"
+            class="bg-danger text-white"
+            style="
+              border-radius: 5px;
+              width: 70px;
+              height: 40px;
+              text-align: center;
+              justify-content: center;
+              align-items: center;
+              padding: 7px;
+              margin-top: 15px;
+            "
+            >Delete</a
+          >
+        </div>
+      </form>
     </div>
   </div>
-      <div class="d-flex">
-        <button type="submit" class="btn btn-primary m-3">Update</button>
-        <a href="{{user.get_delete_url}}" class="bg-danger text-white" style="border-radius: 5px; width: 70px; height: 40px; text-align: center; justify-content: center; align-items: center; padding: 7px; margin-top: 15px ;">Delete</a>
-    </div>
-
-   
-</form>
-  </div>
-</div>
-
 </div>
 
 {% endblock %}

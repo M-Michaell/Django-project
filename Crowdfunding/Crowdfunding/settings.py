@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'Crowdfunding.urls'
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'social_django.context_processors.backends',
                 'Crowdfunding.context_processors.show_category'
 
             ],
@@ -158,3 +160,25 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'emailer.iti@gmail.com'
 EMAIL_HOST_PASSWORD = 'aviurhkroydbcfmv'
+
+
+CSRF_FAILURE_VIEW = 'account.views.csrf_failure_redirect'
+
+
+
+# AUTHENTICATION_BACKENDS = [
+#     'account.backends.EmailBackend',
+#     'social_core.backends.facebook.FacebookOAuth2',
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
+# LOGIN_URL = 'account/login'
+LOGIN_URL = 'craete_campaign/account/login'
+
+LOGIN_REDIRECT_URL = 'project/home'
+LOGOUT_URL = 'account/logout'
+LOGOUT_REDIRECT_URL = 'account/login'
+# SOCIAL_AUTH_FACEBOOK_KEY = "684732870267551"
+# SOCIAL_AUTH_FACEBOOK_SECRET = "894d1b20f149706bbcf1ad05c4587ee9"
+# SOCIAL_AUTH_FACEBOOK_SCOPE = [
+#     'email',
+# ]
