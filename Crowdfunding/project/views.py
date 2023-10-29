@@ -1,10 +1,7 @@
 from django.shortcuts import render ,redirect
 from django.urls import reverse_lazy ,reverse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from decimal import Decimal
-
 from django.db.models import Sum, Count,Avg
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView ,DetailView
 from project.form import CreateCampaignForm, CreateCategoryForm ,Donation_form
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
@@ -12,8 +9,8 @@ from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-#
-# # Create your views here.
+
+# Create your views here.
 class ListAllCampaign(ListView):
     model = Campaign
     template_name = 'project/list_all_campaign.html'
@@ -26,9 +23,25 @@ class CreateCampaign(LoginRequiredMixin,CreateView):
     form_class = CreateCampaignForm
     success_url = reverse_lazy('project.list.all.campaign')
 
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+
+class DeleteCampaign(DeleteView):
+    model = Campaign
+    template_name = 'project/delete.html'
+    context_object_name = "campaign"
+    success_url = reverse_lazy('project.list.all.campaign')
+
+class EditCampaign(UpdateView):
+    model = Campaign
+    template_name = 'project/edit_campaign.html'
+    context_object_name = "campaign"
+    form_class = CreateCampaignForm
+    success_url = reverse_lazy('project.list.all.campaign')
 
 class CreateCategory(CreateView):
     model = Category
@@ -41,23 +54,6 @@ class ListAllCategory(ListView):
     model = Category
     template_name = 'project/home.html'
     context_object_name = 'cats'
-
-
-# class CreateTag(CreateView):
-#     model = Tag
-#     template_name = 'project/create_tag.html'
-#     form_class = CreateTagForm
-#     success_url = reverse_lazy('project.createCampaign')
-
-    # def form_valid(self, form):
-    #     # Determine which button was clicked
-    #     if 'save_button' in self.request.POST:
-    #         self.success_url = reverse_lazy('project.createCampaign')
-    #     elif 'other_button' in self.request.POST:
-    #         self.success_url = reverse_lazy('project.createTag')
-    #
-    #     return super().form_valid(form)
-
 
 
 
@@ -115,40 +111,7 @@ class CreateDonation(CreateView):
 def home(request):
     return render(request, 'project/home.html')
 
-# class CreateImage(CreateView):
-#     model = Image
-#     template_name = 'project/create.html'
-#     form_class = CustomizedImageCreationForm
-#     success_url = reverse_lazy("project.home")
-#
-#     def form_valid(self, form):
-#         # Determine which button was clicked
-#         if 'save' in self.request.POST:
-#             self.success_url = reverse_lazy('project.home')
-#         elif 'add' in self.request.POST:
-#             self.success_url = reverse_lazy('images.create')
-#
-#         return super().form_valid(form)
 
-
-# class DeleteImage(DeleteView):
-#     model = Image
-#     template_name = 'accounts/delete.html'
-#     success_url = reverse_lazy('project.home')
-#
-# class EditProfileView(UpdateView):
-#    model = Image
-#    template_name = 'project/edit.html'
-#    form_class = CustomizedImageCreationForm
-#    success_url = reverse_lazy('project.home')
-#
-# class ImageView(DetailView):
-#     model = Image
-#     template_name = 'project/view.html'
-#     context_object_name = 'image'
-#     def get_object(self, queryset=None):
-#         return self.request.user
-#
 
 def profile(request):
     return render(request, template_name='project/profile.html')
