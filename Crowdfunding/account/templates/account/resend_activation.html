@@ -6,16 +6,19 @@ enhance {% endblock %} {% block body %}
 <div class="vh-100" style="margin: 100px;">
     <h2>We Send an Activation Link to your email,</h2>
     <p>if you didn't receive the activation email click resend to resend to your email</p>
-    <h4 class="text-danger">{{error}}</h4>
+
+    {% if error_message == 'email send successfully' %}
+    <h6 class="text-success">{{error_message}}</h6>
+    {% else %}
+    <h6 class="text-danger">{{error_message}}</h6>
+    {% endif %}
     <form method="post">
         {% csrf_token %}
         <input type="text" name="email" value="{{email}}" readonly> 
         <button class="btn btn-success mt-3" type="submit">Resend</button>
     </form>
     
-    {% if error_message %}
-    <p>{{ error_message }}</p>
+
 </div>
-{% endif %}
 
 {% endblock %}

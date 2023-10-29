@@ -16,13 +16,13 @@ enhance {% endblock %} {% block body %}
             {% if form.errors %}
             <div class="alert alert-danger" role="alert">
                 {% for field, errors in form.errors.items %}
-                    <strong>{{ field|title }}:</strong>
-                    <ul>
+                    <!-- <strong>{{ field|title }}:</strong> -->
+                    
                         {% for error in errors %}
                             
-                                <li>{{ error }}</li>
+                            {{ error }}
                         {% endfor %}
-                    </ul>
+                    
                 {% endfor %}
             </div>
           {% endif %}
