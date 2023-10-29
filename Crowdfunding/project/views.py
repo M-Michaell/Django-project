@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login
 
 from django.db.models import Sum, Count,Avg
 from django.views.generic import ListView ,DetailView
-from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,CreateCommentReportForm,PasswordConfirmationForm
+from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,PasswordConfirmationForm,CreateReplyForm,CreateCommentReportForm
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
 from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -64,7 +64,6 @@ def getUser(request):
         active_user_id = CustomUser.objects.get(id=request.session['user_id'])
         return active_user_id
 
-
 @login_required(login_url='/account/login/') 
 def campaign_details(request, campaign_id):
     try:
@@ -78,16 +77,21 @@ def campaign_details(request, campaign_id):
     tags = campaign.tags.all()
     images_all = campaign.images.all()
     rating = round(campaign.rate.aggregate(rate=Avg('rate'))['rate'] or 0.00 ,2)
-    related_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()[:4]
-    progress = (float(total_donation) / float(campaign.total_target)) * 100
+    rel_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()
+    related_campaigns=[]
+    for camp in rel_campaigns:
+        camp_total_donation = camp.donation.aggregate(total_donation=Sum('donation'))['total_donation'] or 0.00
+        if len(related_campaigns)<4 :
+            if camp.total_target > camp_total_donation:
+                related_campaigns.append(camp)
+        else :break
 
-    # active_user_id=getUser(request)
     if Donation.objects.filter(campaign=campaign).last() :
         last_donation = Donation.objects.filter(campaign=campaign).last().created_at
     else:
         last_donation="no donations yet"
     can_cancel=False
-    if progress < 25:
+    if campaign.get_progress() < 25:
         can_cancel=True
     
 
@@ -98,8 +102,8 @@ def campaign_details(request, campaign_id):
     comment_report_form =CreateCommentReportForm()
     create_rate =CreateRatingForm()
     password_form = PasswordConfirmationForm()
+    add_reply=CreateReplyForm()
 
-    error_message = None
     context = {
     'campaign': campaign,
     'total_donation': total_donation,
@@ -107,10 +111,8 @@ def campaign_details(request, campaign_id):
     'comments': comments,
     'tags': tags,
     'rating_width': rating * 20,
-    'f_image': images_all[0],
-    'images': images_all[1:],
+    'images': images_all,
     'related_campaigns': related_campaigns,
-    "progress": progress,
     'comment_form': comment_form,
     'donation_form': donation_form,
     'report_form': report_form,
@@ -118,12 +120,10 @@ def campaign_details(request, campaign_id):
     'last_donation': last_donation,
     "create_rate":create_rate,
     "rating" :rating,
-    "error_message": error_message,
     "request": request,
     'password_form': password_form,
-    'can_cancel':can_cancel
-    
-    # "active_user_id":active_user_id,
+    'can_cancel':can_cancel,
+    "add_reply":add_reply
 
 }
 
@@ -145,7 +145,7 @@ def campaign_details(request, campaign_id):
                 donation.campaign = campaign
                 donation.user = request.user
                 donation.save()
-                add_message(request, messages.SUCCESS, "Your donation has been successfully processed, Tkanks 🙏")
+                add_message(request, messages.SUCCESS, "Your donation has been successfully processed, Thanks 🙏")
                 return redirect('campaign.details', campaign_id=campaign_id)
             else:
                 add_message(request, messages.ERROR, "Your donation should be geater than 5.")
@@ -156,6 +156,7 @@ def campaign_details(request, campaign_id):
             report_form = CreateReportForm(request.POST)
             if report_form.is_valid():
                 report = report_form.save(commit=False)
+                
                 report.campaign = campaign
                 report.user = request.user
                 report.save()
@@ -171,6 +172,19 @@ def campaign_details(request, campaign_id):
                 report.user = request.user
                 report.save()
                 add_message(request, messages.SUCCESS, "Your comment report has been successfully submitted.")
+                return redirect('campaign.details', campaign_id=campaign_id)
+            
+        elif 'reply' in request.POST:
+            add_reply=CreateReplyForm(request.POST)
+            comment_id = request.POST['comment_id']  
+            print(comment_id)
+            if add_reply.is_valid():
+                reply = add_reply.save(commit=False)
+                print(reply)
+                reply.comment = Comment.objects.get(id=comment_id)
+                reply.user = request.user
+                reply.save()
+                add_message(request, messages.SUCCESS, "Your reply has been successfully submitted.")
                 return redirect('campaign.details', campaign_id=campaign_id)
             
 

@@ -11,7 +11,8 @@ admin.site.register(models.Report)
 
 
 admin.site.register(models.Reply)
-#admin.site.register(models.Image)
+admin.site.register(models.Attachment)
 
 admin.site.register(models.Comment)
 admin.site.register(models.Comment_Report)
+
