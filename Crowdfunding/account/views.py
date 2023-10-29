@@ -127,7 +127,7 @@ class CustomEditAccountView(UpdateView):
     model = CustomUser
     form_class = CustomEditAccountForm
     template_name = 'account/edit.html'
-    success_url = reverse_lazy('project.home') 
+    success_url = reverse_lazy('project.profile') 
 
     def form_valid(self, form):
         if 'image' in form.cleaned_data:

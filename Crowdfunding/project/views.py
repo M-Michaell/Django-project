@@ -27,8 +27,7 @@ class ListAllCampaign(ListView):
     template_name = 'project/list_all_campaign.html'
     context_object_name = 'campaigns'
 
-
-class CreateCampaign(LoginRequiredMixin,CreateView):
+class CreateCampaign(CreateView):
     model = Campaign
     template_name = 'project/create_campaign.html'
     form_class = CreateCampaignForm
@@ -247,22 +246,14 @@ class CreateDonation(CreateView):
 
 
 
-def home(request):
-    return render(request, 'project/home.html')
 
 
-def profile(request):
-    # Assuming you have a way to identify the user, replace 'user_id' with the actual user identifier.
-    user_id = request.user.id  # Replace with the user's actual ID or the way you identify the user.
-    user_donations = Donation.objects.filter(user_id=user_id)
-    
-    return render(request, 'project/profile.html', {'user_donations': user_donations})
-
-####
 def home(request):
     featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
     latest = Campaign.objects.all().order_by('-created_at')[:5]
-    return render(request, 'project/home.html', context = {"featured": featured, "latest": latest})
+    campaigns = Campaign.objects.annotate(average_rating=Avg('rate__rate'))
+    top_rated_campaigns = campaigns.order_by('-average_rating')[:5]
+    return render(request, 'project/home.html', context = {"featured": featured, "latest": latest, 'top_rated_campaigns': top_rated_campaigns})
 
 
 def featured(request):
@@ -273,19 +264,19 @@ def latest(request):
         latest = Campaign.objects.all().order_by('-created_at')[:5]
         return render(request, 'project/latest.html', context = {"latest": latest})
 
-
+###############bug################
 def search(request):
-  q = request.GET.get("q", "")
-  campaignList = Campaign.objects.filter(
-      Q(title__icontains=q) | Q(tags__name__icontains=q)
-  )
+    q = request.GET.get("q", "")
+    campaigns = Campaign.objects.filter(
+        Q(title__icontains=q) | Q(tags__name__icontains=q)
+    ).distinct()  # Use distinct() to ensure unique results
 
-  if not campaignList:
-    # Redirect to a page with no search results found
-    return render(request, "project/no_search_results.html")
+    if not campaigns:
+        # Redirect to a page with no search results found
+        return render(request, "project/no_search_results.html", context={"search_term":q})
 
+    return render(request, "project/search.html", context={"campaignList": campaigns, "search_term":q})
 
-  return render(request, "project/search.html", context={"campaignList": campaignList})
 
 class CategoryDetailView(DetailView):
     model = Category
@@ -317,3 +308,17 @@ class UploadView(FormView):
                 campaign=campaign
             )
         return redirect(reverse('project.list.all.campaign'))
+
+
+
+
+
+
+def profile(request):
+    user_id = request.user.id
+    user_donation = Donation.objects.filter(user_id=user_id)
+    user_campaign = Campaign.objects.filter(user_id=user_id)
+    return render(request, template_name='project/profile.html', 
+    context = {
+    'user_donation': user_donation,
+    'user_campaign': user_campaign})
