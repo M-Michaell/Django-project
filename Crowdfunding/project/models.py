@@ -118,7 +118,9 @@ class Rate(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length=400, null=True)
-    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="comments")
+    campaign = models.ForeignKey(
+        Campaign, default=None, on_delete=models.CASCADE, related_name="comments"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="comment")
     
@@ -141,7 +143,10 @@ class Comment_Report(models.Model):
     report =  models.CharField(
         max_length=200,
         choices=report_category,
-        default='1',
+        default="1",
+    )
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name="comment_report"
     )
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
 
