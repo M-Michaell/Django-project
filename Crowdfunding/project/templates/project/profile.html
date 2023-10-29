@@ -84,11 +84,11 @@ Profile {% endblock %}
       </tr>
     <tbody>
      
-      {% for users in user_campaign %}
+      {% for users in user_donation %}
 
         <tr>
-          <th scope="row">{{ users.donation }}</th>
-          <td>{{ users.campaign }}</td>
+          <th scope="row">{{ users.campaign }}</th>
+          <td>{{ users.donation }}</td>
           <td>{{ users.created_at }}</td>
           
         </tr>
