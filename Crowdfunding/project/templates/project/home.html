@@ -2,15 +2,30 @@
 Home {% endblock %} {% block body %}
 <style>
   /* Add this CSS to your template */
-  .carousel-item img {
-    max-height: 65vh; /* Adjust the value to your desired height */
-    object-fit: cover;
-  }
+.carousel-item img {
+  max-height: 50vh;
+  object-fit: cover;
+  image-rendering: crisp-edges;
+}
+.card-container {
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a shadow to the container */
+  padding: 20px; /* Add some padding around the container */
+}
 
+.custom-shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5); /* Adjust the color (0, 0, 255) and opacity (0.5) as needed */
+}
+
+/* Center the title text */
+.text-center {
+  text-align: center;
+}
   
 </style>
-<div class="container-fluid p-0">
-  <div class="row col-12 w-100 m-0">
+<div class="container-fluid mb-5 p-0">
+  <div class="row col-12 m-0">
     <div
       id="carouselExampleCaptions"
       class="carousel slide p-0"
@@ -51,68 +66,21 @@ Home {% endblock %} {% block body %}
         ></button>
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp"
-            class="d-block w-100"
-            alt="Wild Landscape"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
-            class="d-block w-100"
-            alt="Camera"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Second slide label</h5>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
-            class="d-block w-100"
-            alt="Exotic Fruits"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-            </p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
-            class="d-block w-100"
-            alt="Exotic Fruits"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-            </p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
-            class="d-block w-100"
-            alt="Exotic Fruits"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-            </p>
-          </div>
-        </div>
-      </div>
+        {% for campaign in top_rated_campaigns %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img class="d-block w-100" style="max-height: 65vh" src="{{ campaign.get_image_url }}" alt="{{ campaign.title }}">
+            <div class="carousel-caption d-md-block ">
+              <div >
+              <a href="{% url 'campaign.details' campaign.id %}" style="text-decoration: none; color: inherit;"><h3 class="fs-1"><strong>{{ campaign.title }}</strong></h3></a>
+              <p class="text-truncate text-center mx-auto">{{ campaign.detail }}</p>
+    
+            </div>
+    </div>
+    
+        
+    </div>
+        {% endfor %}
+    </div>
       <button
         class="carousel-control-prev"
         type="button"
@@ -134,10 +102,12 @@ Home {% endblock %} {% block body %}
     </div>
   </div>
 
-  <div class="row d-flex  justify-content-center mt-4">
-      <div class="card col-sm-4 d-inline-block card card-background move-on-hover ">
-        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-        <div class="card-body text-center ">
+  <div class="container-fluid justify-content-center p-0" >
+    <h2 class="text-center m-5"><strong>Checkout our latest and featured projects!</strong></h2>
+    <div class="row col-12 m-0" >
+      <div class="card-container">
+        <div class="card col-sm-3 d-inline-block custom-shadow">
+          <div class="card-body text-center">
           <h5 class="card-title">
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/></svg>
             Latest Projects</h5>
@@ -147,11 +117,11 @@ Home {% endblock %} {% block body %}
             {% endfor %}
           </ul>
           <p class="card-text">
-            <a class="btn btn-outlin-secondary mt-3" href="{% url 'project.latest' %}" role="button">veiw</a>
+            <a class="btn btn-outline-dark mt-3" href="{% url 'project.latest' %}" role="button">veiw</a>
           </p>
         </div>
       </div>
-      <div class="card col-sm-4 d-inline-block" style="background-image: url('/media/project/images/featured_bg.avif');">
+      <div class="card col-sm-3 d-inline-block custom-shadow" >
         <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
         <div class="card-body text-center">
           <h5 class="card-title">
@@ -163,7 +133,7 @@ Home {% endblock %} {% block body %}
             {% endfor %}
           </ul>
 
-            <a class="btn btn-outlin-secondary mt-3" href="{% url 'project.featured' %}" role="button">veiw</a>
+            <a class="btn btn-outline-dark mt-3" href="{% url 'project.featured' %}" role="button">veiw</a>
        
           </div>
       </div>
@@ -175,7 +145,3 @@ Home {% endblock %} {% block body %}
   <a class="btn btn-dark mt-3" href="{% url 'project.createCampaign' %}" role="button">Create a New Project</a>
 </div>
 {% endblock %}
-<link rel="stylesheet" href="{% static 'project/softui/css'%}">
-<link rel="stylesheet" href="{% static 'project/softui/js'%}">
-<link rel="stylesheet" href="{% static 'project/softui/fonts'%}">
-<link rel="stylesheet" href="{% static 'project/softui/scss'%}">

@@ -3,42 +3,64 @@
 {% block title %} latest {% endblock %}
 
 {% block body %}
+
+<style>
+    .fixed-height-card {
+        height: 300px;
+    }
+    .fixed-height-card img {
+            height: 300px;
+        }
+</style>
+
 <h1 class="text-center mt-5">Latest Projects</h1>
 <div class="container mt-5">
-    <div class="row" style="width: 1300px;">
-        {% for fet in latest %}
-        <div class="col-4">
-            <div class="card border-0 mb-4 w-30">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid" />
-                    <a href="#!">
-                        <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                </div>
-                <div class="card-body">
-                    <a href="{% if user.is_authenticated %}
-                    {{ fet.get_details }}
-                    {% else %}
-                    {% url 'account.login' %}?next={{ fet.get_details }}
-                    {% endif %}">
-
-                        <h5 class="card-title">{{ fet.title }}</h5>
-                    </a>
-                    <p class="card-text">{{ fet.category }}</p>
-                    <p class="card-text">{{ fet.description }}</p>
-                </div>
+    <div class="row row-cols-3 justify-content-center">
+        {% for camp in latest %}
+        <div class="col mb-5">
+            <a href="{% if user.is_authenticated %}
+                      {{ camp.get_details }}
+                      {% else %}
+                      {% url 'account.login' %}?next={{ camp.get_details }}
+                      {% endif %}">
+              <div class="card h-100 fixed-height-card">
+                <img src="{{camp.get_image_url}}" class="card-img-top shadow shadow-1-secondary " alt="...">
+                <div class="card-body pb-2">
+                  <h5 class="card-title text-black">{{ camp.title }}</h5>
+            </a>
+            <div>
+              <p class="text-truncate">Details: {{camp.detail}}</p>
             </div>
+            <!-- progrss -->
+            <div class="my-3">
+              <div class="d-flex flex-lg-nowrap align-items-end">
+                <p class="text-light-emphasis ms-1 fw-bold">{{camp.get_total_deonation}}</p>
+                <p class="text-light-emphasis ms-1">
+                  L.E raised of {{camp.total_target}}
+                </p>
+              </div>
+              <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: {{camp.get_progress}}% "></div>
+              </div>
+            </div>
+            <!-- progrss -->
+            <p class="d-flex justify-content-start align-items-center">
+              Category:
+              <a class="btn btn-secondary ms-2" href="{% url 'category_detail' camp.category.id %}">{{camp.category}}</a>
+            </p>
+          </div>
+          <div class="card-footer">
+            <small class="text-body-secondary">End date: {{camp.end_date}}</small>
+          </div>
         </div>
-        {% if forloop.counter|divisibleby:3 %}
-    </div>
-    <div class="row">{% endif %}
+      </div>
         {% endfor %}
     </div>
 
     <div class="text-center mt-5">
-        <a href="#!" class="btn btn-primary">Back to Home</a>
+        <a href="{% url 'project.home' %}" class="btn btn-primary">Back to Home</a>
     </div>
 </div>
-
 
 {% endblock %}
