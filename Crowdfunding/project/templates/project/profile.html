@@ -64,7 +64,7 @@ Profile {% endblock %}
           <div
             class="bg-body-tertiary p-3 m-3 rounded-3 d-flex grid gap-5 justify-content-center shadow-lg"
           >
-            <a href="" class="text-decoration-none text-black fs-3"><i class="fa-solid fa-chart-pie me-2"></i>{{user.campaign|length}} Campaign</a>
+            <a href="" class="text-decoration-none text-black fs-3"><i class="fa-solid fa-chart-pie me-2"></i>{{user_campaign|length}} Campaign</a>
           </div>
         </div>
         </div>
@@ -84,7 +84,7 @@ Profile {% endblock %}
       </tr>
     <tbody>
      
-      {% for users in user_donation %}
+      {% for users in user_campaign %}
 
         <tr>
           <th scope="row">{{ users.donation }}</th>
