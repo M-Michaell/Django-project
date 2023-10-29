@@ -6,8 +6,6 @@ from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from decimal import Decimal
 from django.contrib.auth import authenticate, login
-
-
 from django.db.models import Sum, Count,Avg
 from django.views.generic import ListView ,DetailView
 from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,CreateCommentReportForm,PasswordConfirmationForm
@@ -16,7 +14,8 @@ from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from account.models import CustomUser django.contrib.messages import add_message, constants as messages
+from account.models import CustomUser
+from django.contrib.messages import add_message, constants as messages
 
 
 
