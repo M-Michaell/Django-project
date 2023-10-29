@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{% static 'project/bootstrap/css/bootstrap.min.css'%}">
     <link rel="stylesheet" href="{% static 'project/style/base.css'%}">
     <link rel="stylesheet" href="{% static 'project/mdb/css/mdb.min.css'%}">
+    <link rel="stylesheet" href="{% static 'account/css/edit.css' %}">
+
     <style>
         li {
             color: red;
@@ -81,10 +83,10 @@
                         <div class="d-flex  mx-3 my-auto">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">{{user.username}}</a>
+                                    <a class="nav-link" href="{% url 'account.edit' %}">{{user.username}}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">logout</a>
+                                    <a class="nav-link" href="{% url 'account.logout' %}">logout</a>
                                 </li>
                             </ul>
                         </div>
@@ -92,10 +94,10 @@
                         <div class="d-flex  mx-3 my-auto">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">Register</a>
+                                    <a class="nav-link" href="{% url 'account.register' %}">Register</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">login</a>
+                                    <a class="nav-link" href="{% url 'account.login' %}">login</a>
                                 </li>
 
                             </ul>
@@ -127,6 +129,7 @@
         
     </script>
     <script src="{% static 'project/mdb/js/mdb.min.js'%}"> </script>
+    </script>
 </body>
 
 </html>

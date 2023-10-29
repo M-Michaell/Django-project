@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
@@ -25,17 +25,19 @@ from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAcc
 
 
 
-def userHome(request):
-    return render(request, 'account/home.html')
-
-
 
 
 class CustomRegistrationView(CreateView):
     model=CustomUser
     form_class = MyUserCreationForm
     template_name = 'account/register.html'
-    success_url = reverse_lazy('account.login') 
+    # success_url = reverse_lazy('account.resend_activation') 
+
+    def get_success_url(self):
+        email = self.request.POST.get('email')
+        if email:
+            return reverse_lazy('account.resend_activation', kwargs={'email': email})
+    
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -54,6 +56,9 @@ class CustomRegistrationView(CreateView):
         to_email = form.cleaned_data.get('email')
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
+
+
+        self.extra_context = {'email': to_email}
         
         messages.success(self.request, 'Account data created successfully.')
         return super().form_valid(form)
@@ -70,16 +75,55 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        current_site = get_current_site(request)
+        # return HttpResponse(f'<meta http-equiv="refresh" content="3;url={reverse_lazy("project.home")}">Thank for you registration, We will redirect you to The project after 3 seconds...')
+        return render(request, 'account/redirect_active_email.html', {'redirect_url': f'{current_site.domain}/project/home'})
+
+    
     else:
         return HttpResponse('Activation link is invalid!')
     
+
+
+
+def resend_activation(request,email):
+    if request.method == 'POST':
+        email = request.POST['email']
+        User = CustomUser
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return render(request, 'account/resend_activation.html', {'email': '','error_message': 'Email not found'})
+
+        if user.is_active:
+            return render(request, 'account/resend_activation.html', {'email': user.email,'error_message': 'User is already active'})
+
+        current_site = get_current_site(request)
+        mail_subject = 'Activate your blog account.'
+        message = render_to_string('account/acc_active_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
+        to_email = email
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
+
+        return render(request, 'account/resend_activation.html', {'email': user.email,'error_message':'email send successfully'})
+
+    return render(request, 'account/resend_activation.html', {'email': email,'error':''})
+
+
+
+
+
 
 class CustomEditAccountView(UpdateView):
     model = CustomUser
     form_class = CustomEditAccountForm
     template_name = 'account/edit.html'
-    success_url = reverse_lazy('account.home') 
+    success_url = reverse_lazy('project.home') 
 
     def form_valid(self, form):
         if 'image' in form.cleaned_data:
@@ -102,13 +146,20 @@ class CustomLoginView(LoginView):
 
 
     def get_success_url(self):
-        return reverse_lazy('account.home')
+        next_url = self.request.GET.get('next', None)
+        if next_url:
+            if next_url and next_url.startswith('/details/'):
+                return next_url
+            else:
+                return reverse_lazy('project.home')
+            
+
 
 
 class CustomDeleteAccountView(DeleteView):
     model = CustomUser
     template_name = 'account/delete.html'  
-    success_url = reverse_lazy('account.home')
+    success_url = reverse_lazy('project.home')
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
