@@ -152,6 +152,7 @@ class CustomLoginView(LoginView):
                 return next_url
             else:
                 return reverse_lazy('project.home')
+        return reverse('project.home')
             
 
 
@@ -207,3 +208,5 @@ class CustomPasswordResetDoneView(PasswordResetDoneView) :
 
 
 
+def csrf_failure_redirect(request, reason="CSRF verification failed. Request aborted."):
+    return redirect('project.home')

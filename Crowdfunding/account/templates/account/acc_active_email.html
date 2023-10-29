@@ -1,40 +1,10 @@
-Hi {{ user.username }}, Please click on the link to confirm your registration:
-<a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}"
-  >Activate your account</a
->
+Hi {{ user.username }}, 
 
 
 
+Please click on the link to confirm your registration:
+"http://{{ domain }}{% url 'activate' uidb64=uid token=token %}"
 
+The activation link will be expired after 24 hours
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  
-  <div class="form-control">
-    <div style="margin: 100px;">
-      <center>
-        <h1>Confirm Your Email Address</h1>
-      </center>
-    
-      <p>Hi {{ user.username }}</p>
-      <br>
-      <br>
-      Your activation Link for you account regesterd in <a href="http://{{ domain }}/home">CrowdFunding</a> website is ready 
-      <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activate My Account </a>
-      <br>
-    
-      <p class="text-danger">Hint that the activation link will be expired after 24 hours</p>
-      <br>
-      <p>if you didn't register in our website, Ignore this email</p>
-    
-    
-    </div>
-  </div>
-</body>
-</html>
+<h1>Hello</h1>

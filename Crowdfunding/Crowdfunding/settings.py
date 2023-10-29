@@ -155,3 +155,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'emailer.iti@gmail.com'
 EMAIL_HOST_PASSWORD = 'aviurhkroydbcfmv'
+
+
+CSRF_FAILURE_VIEW = 'account.views.csrf_failure_redirect'
