@@ -16,7 +16,8 @@ from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from account.models import CustomUserfrom django.contrib.messages import add_message, constants as messages
+from account.models import CustomUser
+from django.contrib.messages import add_message, constants as messages
 
 
 

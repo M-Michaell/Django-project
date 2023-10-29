@@ -4,12 +4,12 @@
 
 {% block body %}
 <div class="container">
-  <h1>Edit Campaign Image</h1>
-  <form method="post" enctype="multipart/form-data">
+  <h1>Campaign Images</h1>
+  <form method="post" enctype="multipart/form-data" class="m-4 border p-5 rounded-5 shadow bg-body-tertiary w-75 m-auto mt-4">
     {% csrf_token %}
     {{ form }}
-    <button type="submit" name="save" class="btn btn-primary">Add</button>
-      <a href="{% url 'project.list.all.campaign' %}" class="btn btn-secondary">Cancel</a>
+    <button type="submit" name="save" class="btn btn-primary m-2">Add</button>
+      <a href="{% url 'project.list.all.campaign' %}" class="m-2 btn btn-secondary">Cancel</a>
 
   </form>
 </div>
