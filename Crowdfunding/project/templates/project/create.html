@@ -1,16 +1,16 @@
 {% extends 'project/layouts/base.html' %}
 
-{% block title %} Edit Campaign Image {% endblock %}
+{% block title %} doy you need to add moro photos? {% endblock %}
 
 {% block body %}
 <div class="container">
-  <h1>Edit Campaign Image</h1>
-  <form method="post" enctype="multipart/form-data">
+  <h1>Campaign Images</h1>
+  <form method="post" enctype="multipart/form-data" class="m-4 border p-5 rounded-5 shadow bg-body-tertiary w-75 m-auto mt-4">
     {% csrf_token %}
     {{ form }}
-    <button type="submit" name="save" class="btn btn-primary">Save Changes</button>
-    <button type="submit" name="add" class="btn btn-dark">Add a new Photo</button>
-    <!-- <a class="btn btn-dark" href="{% url 'images.create' %}?next={{ request.path }}&campaign_id={{ object.campaign.id }}" role="button">Add a new Photo</a> -->
+    <button type="submit" name="save" class="btn btn-primary m-2">Add</button>
+      <a href="{% url 'project.list.all.campaign' %}" class="m-2 btn btn-secondary">Cancel</a>
+
   </form>
 </div>
 {% endblock %}

@@ -148,7 +148,6 @@ class CustomLoginView(LoginView):
     authentication_form = MyAuthenticationForm
     template_name = 'account/login.html'
 
-
     def get_success_url(self):
         next_url = self.request.GET.get('next', None)
         if next_url:

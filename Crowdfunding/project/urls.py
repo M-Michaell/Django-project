@@ -1,29 +1,30 @@
 from django.urls import path
-# from project.views import CreateCampaign
 from project.views import campaign_details,CreateDonation
+from project.views import DeleteCampaign, ListAllCampaign, EditCampaign ,CreateCampaign,  CreateCategory
+from django.contrib.auth.decorators import login_required
+from project.views import CreateCampaign,  CreateCategory, home, featured, latest, search, CategoryDetailView, profile, UploadView
 
-from project.views import home
-from project.views import ListAllCampaign, CreateCampaign,  CreateCategory, ListAllCategory
 
-from project.views import home, profile
-from project.views import ListAllCampaign, CreateCampaign, CreateCategory
 
 
 urlpatterns = [
     path('list_all/', ListAllCampaign.as_view(), name="project.list.all.campaign"),
-    # path('craete_tag/', CreateTag.as_view(), name="project.createTag"),
     path('craete_category/', CreateCategory.as_view(), name="project.createCategory"),
     path('craete_campaign/',CreateCampaign.as_view(), name="project.createCampaign"),
-    path('details/<int:campaign_id>', campaign_details,name="campaign.details"),
-    path('donation/<int:campaign_id>', CreateDonation.as_view(),name="campaign.donation"),
-
-    #path('home/', ListAllCategory.as_view(), name = 'project.home'),
-    # path('uploadImage/', CreateImage.as_view(), name='images.create'),
-    # path('viewImage/', ImageView.as_view(), name='images.show'),
-
-    path('home/', home, name = 'project.home'),
-
+    path('details/<int:campaign_id>', campaign_details , name="campaign.details"),
+    path('', home, name = 'project.home'),
+    path('featured/', featured, name="project.featured"),
+    path('latest/', latest, name="project.latest"),
+    path('searchResults/', search, name="project.search"),
+    path('category/<int:pk>', CategoryDetailView.as_view(), name='category_detail'),
+    path('nosearchResults/', search, name="project.nosearchresults"),
     path('profile/', profile, name="project.profile"),
+    path('<int:pk>/delete', login_required(DeleteCampaign.as_view()), name="project.deleteCampaign"),
+    path('<int:pk>/edit', login_required(EditCampaign.as_view()), name="project.editCampaign"),
 
-    ]
+
+
+    path('upload/', login_required(UploadView.as_view()), name="project.upload")
+
+]
 

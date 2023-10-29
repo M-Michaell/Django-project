@@ -4,37 +4,36 @@ from django.core.validators import MinValueValidator,MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from taggit.managers import TaggableManager
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-
+    name = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return f'{self.name}'
 
-# class Tag(models.Model):
-#     name = models.CharField(max_length=50)
-#     def __str__(self):
-#         return f'{self.name}'
+
 
 
 class Campaign(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
     detail = models.TextField(max_length=5000)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
     tags = TaggableManager()
-    #user = models.ForeignKey(User, on_delete=models.CASCADE, default=None,related_name="campaign")
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None,related_name="campaign")
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def clean(self):
+        if self.end_date <= self.start_date:
+            raise ValidationError("End date must be greater than start date.")
 
     def __str__(self):
         return f'{self.title}'
@@ -42,24 +41,37 @@ class Campaign(models.Model):
     def get_image_url(self):
         return f'/media/{self.image}'
 
-    def get_show_url(self):
-        return reverse('posts.details', args=[self.id])
+    def get_details(self):
+        return reverse('campaign.details', args=[self.id])
 
     def get_edit_url(self):
-        return reverse('posts.edit', args=[self.id])
+        return reverse('project.editCampaign', args=[self.id])
 
-    def get_delete_url(self):
-        return reverse('posts.delete', args=[self.id])
+    def get_delete(self):
+        return reverse('campaign.delete', args=[self.id])
+
+    @classmethod
+    def get_sepcific_object(cls, id):
+        return cls.objects.get(id=id)
+
+    @classmethod
+    def get_all_campaign(cls):
+        return cls.objects.all()
 
 
-
+# class Image(models.Model):
+#     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
+#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
+#
+#     def get_image_url(self):
+#         return f'/media/{self.image}'
 
 class Donation (models.Model):
     donation = models.DecimalField(max_digits=10,
                                     decimal_places=2 ,
                                    validators=[MinValueValidator(limit_value=5.00)],
                                    default=5.00)
-    project = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="donation")
+    campaign = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="donation")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="donation")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -68,7 +80,7 @@ class Donation (models.Model):
 
 class Report (models.Model):
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="reports")
-    project = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="reports")
+    campaign = models.ForeignKey(Campaign,on_delete=models.CASCADE,related_name="reports")
     report_category =[("1","Flase Information"),
                   ("2","Violenece"),
                   ("3","Harassment"),
@@ -79,25 +91,29 @@ class Report (models.Model):
                   ("8","Something else")
                   ]
     report=models.CharField(max_length=50,choices=report_category,default="1")
-    report_comment=models.TextField(default='')
+    report_comment=models.TextField(default='',null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Rate(models.Model):
-    rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
-    projcet = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name="rate")
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="rate")
+
+    RATE_CHOICES = [
+        (1, "⭐"),
+        (2, "⭐⭐"),
+        (3, "⭐⭐⭐"),
+        (4, "⭐⭐⭐⭐"),
+        (5, "⭐⭐⭐⭐⭐"),
+    ]
+
+    rate = models.IntegerField(choices=RATE_CHOICES, default=1)
+    campaign = models.ForeignKey('Campaign', on_delete=models.CASCADE, related_name='rate')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='rate')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.user.username} rated {self.campaign.title} with {self.rate} stars"
 
-# class Image(models.Model):
-#     image = models.ImageField(upload_to='project/images/', null=True, blank=True )
-#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, null=True, blank=True, related_name="image")
-#
-#
-#     def get_image_url(self):
-#         return f'/media/{self.image}'
 
 
 class Comment(models.Model):
@@ -117,7 +133,7 @@ class Reply(models.Model):
 
 class Comment_Report(models.Model):
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name="comment_report")
-    report_category=[("1","Flase Information"),
+    report_category=[("1","Flase Informa5.0tion"),
                   ("2","Violenece"),
                   ("3","Harassment"),
                   ("4","spam"),
@@ -132,3 +148,11 @@ class Comment_Report(models.Model):
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, related_name="comment_report"
     )
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,related_name='comment_report')
+
+
+
+#test image-------------------------------------------------------------------
+class Attachment(models.Model):
+    image = models.ImageField(upload_to='project/images',null=False, blank=False)
+    campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
