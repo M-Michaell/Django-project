@@ -1,30 +1,64 @@
-{%extends 'project/layouts/base.html'%}
+{% extends 'project/layouts/base.html' %}
 
-{%load static%}
+{% load static %}
 
-{%block title%} Campaign Search {%endblock%}
+{% block title %} Campaign Search {% endblock %}
 
+{% block body %}
+<style>
+.fixed-height-card {
+    height: 300px;
+}
+.fixed-height-card img {
+        height: 300px;
+    }
+</style>
+<h1 class="text-center mt-5"><strong>Search Results for "{{ search_term }}"</strong></h1>
 
-
-
-
-{%block body%}
-{% for campaign in campaignList%}
-<div class="card m-5" style="width: 25rem;">
-    <img class="card-img-top" src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" width="200" height="200" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-text fs-4">{{campaign.title}}</h5>
-        <p class="card-text fs-4">{{campaign.description}}</p>
-        <a href="#" class="btn btn-primary">Show</a>
-        <a href="#" class="btn btn-danger">Delete</a>
+<div class="container mt-5">
+    <div class="row row-cols-3 justify-content-center">
+        {% for camp in campaignList %}
+            
+            <div class="col">
+                <a href="{% if user.is_authenticated %}
+                          {{ camp.get_details }}
+                          {% else %}
+                          {% url 'account.login' %}?next={{ camp.get_details }}
+                          {% endif %}">
+                  <div class="card h-100 fixed-height-card">
+                    <img src="{{camp.get_image_url}}" class="card-img-top shadow shadow-1-secondary " alt="...">
+                    <div class="card-body pb-2">
+                      <h5 class="card-title text-black">{{ camp.title }}</h5>
+                </a>
+                <div>
+                  <p class="text-truncate">Details: {{camp.detail}}</p>
+                </div>
+                <!-- progrss -->
+                <div class="my-3">
+                  <div class="d-flex flex-lg-nowrap align-items-end">
+                    <p class="text-light-emphasis ms-1 fw-bold">{{camp.get_total_deonation}}</p>
+                    <p class="text-light-emphasis ms-1">
+                      L.E raised of {{camp.total_target}}
+                    </p>
+                  </div>
+                  <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                    aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: {{camp.get_progress}}% "></div>
+                  </div>
+                </div>
+                <!-- progrss -->
+                <p class="d-flex justify-content-start align-items-center">
+                  Category:
+                  <a class="btn btn-secondary ms-2" href="{% url 'category_detail' camp.category.id %}">{{camp.category}}</a>
+                </p>
+              </div>
+              <div class="card-footer">
+                <small class="text-body-secondary">End date: {{camp.end_date}}</small>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
     </div>
 </div>
-{%endfor%}
 
-
-          {%endblock%}
-
-
-
-
-
+{% endblock %}
