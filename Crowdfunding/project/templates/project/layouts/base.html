@@ -50,6 +50,8 @@
                   Categories
                 </a>
                 <ul class="dropdown-menu">
+                     <li><a class="dropdown-item" href="{% url 'project.createCategory' %}">add catecory</a></li>
+                     <li><a class="dropdown-item" href="{% url 'project.list.all.campaign' %}">All</a></li>
                   {% for category in categories %}
                   <li>
                     <a class="dropdown-item" href="{% url 'category_detail' category.id %}">

@@ -1,4 +1,5 @@
-from django.shortcuts import render ,redirect 
+from django.core.exceptions import ValidationError
+from django.shortcuts import render ,redirect
 from django.template import loader
 from django.urls import reverse_lazy ,reverse
 from django.http import Http404
@@ -8,7 +9,6 @@ from django.contrib.auth import authenticate, login
 
 
 from django.db.models import Sum, Count,Avg
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView ,DetailView
 from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,CreateCommentReportForm,PasswordConfirmationForm
 from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
@@ -16,27 +16,42 @@ from django.contrib.auth.models import  User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from account.models import CustomUser
+from account.models import CustomUserfrom django.contrib.messages import add_message, constants as messages
 
 
 
-#
-# # Create your views here.
-# class ListAllCampaign(ListView):
-#     model = Campaign
-#     template_name = 'project/list_all_campaign.html'
-#     context_object_name = 'campaigns'
+# Create your views here.
+class ListAllCampaign(ListView):
+    model = Campaign
+    template_name = 'project/list_all_campaign.html'
+    context_object_name = 'campaigns'
 
 
 class CreateCampaign(LoginRequiredMixin,CreateView):
     model = Campaign
     template_name = 'project/create_campaign.html'
     form_class = CreateCampaignForm
-    success_url = reverse_lazy('project.list.all.campaign')
+    success_url = reverse_lazy('project.upload')
+
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+
+class DeleteCampaign(DeleteView):
+    model = Campaign
+    template_name = 'project/delete.html'
+    context_object_name = "campaign"
+    success_url = reverse_lazy('project.list.all.campaign')
+
+class EditCampaign(UpdateView):
+    model = Campaign
+    template_name = 'project/edit_campaign.html'
+    context_object_name = "campaign"
+    form_class = CreateCampaignForm
+    success_url = reverse_lazy('project.list.all.campaign')
 
 class CreateCategory(CreateView):
     model = Category
@@ -45,23 +60,6 @@ class CreateCategory(CreateView):
     success_url = reverse_lazy('project.home')
 
 
-# class CreateTag(CreateView):
-#     model = Tag
-#     template_name = 'project/create_tag.html'
-#     form_class = CreateTagForm
-#     success_url = reverse_lazy('project.createCampaign')
-
-#     def form_valid(self, form):
-#         # Determine which button was clicked
-#         if 'save_button' in self.request.POST:
-#             self.success_url = reverse_lazy('project.createCampaign')
-#         elif 'other_button' in self.request.POST:
-#             self.success_url = reverse_lazy('project.createTag')
-
-#         return super().form_valid(form)
-
-
-from django.contrib.messages import add_message, constants as messages
 def getUser(request):
         active_user_id = CustomUser.objects.get(id=request.session['user_id'])
         return active_user_id
@@ -78,7 +76,7 @@ def campaign_details(request, campaign_id):
     donation_count = campaign.donation.aggregate(donation_count=Count('id'))['donation_count']
     comments = campaign.comments.all()
     tags = campaign.tags.all()
-    # images_all = campaign.image.all()
+    images_all = campaign.images.all()
     rating = round(campaign.rate.aggregate(rate=Avg('rate'))['rate'] or 0.00 ,2)
     related_campaigns = Campaign.objects.filter(tags__in=tags).exclude(pk=campaign_id).distinct()[:4]
     progress = (float(total_donation) / float(campaign.total_target)) * 100
@@ -109,8 +107,8 @@ def campaign_details(request, campaign_id):
     'comments': comments,
     'tags': tags,
     'rating_width': rating * 20,
-    # 'f_image': images_all[0],
-    # 'images': images_all[1:],
+    'f_image': images_all[0],
+    'images': images_all[1:],
     'related_campaigns': related_campaigns,
     "progress": progress,
     'comment_form': comment_form,
@@ -227,7 +225,16 @@ class CreateDonation(CreateView):
     def get_success_url(self):
         return reverse('campaign.details', kwargs={'campaign_id': self.kwargs['campaign_id']})
 
-###
+
+
+
+
+
+
+
+def home(request):
+    return render(request, 'project/home.html')
+
 
 def profile(request):
     # Assuming you have a way to identify the user, replace 'user_id' with the actual user identifier.
@@ -273,4 +280,28 @@ class CategoryDetailView(DetailView):
             context = super().get_context_data(**kwargs)
             context['campaigns'] = Campaign.objects.filter(category__id=self.object.id)
             return context
-    
+
+#test image-------------------------------------------------------------------
+from django.views.generic.edit import FormView
+from project.form import UploadForm
+from project.models import Attachment
+
+class UploadView(FormView):
+    template_name = 'project/create.html'
+    form_class = UploadForm
+    success_url = reverse_lazy('project.list.all.campaign ')
+
+    def post(self, request):
+        data = request.POST
+        print('mohmmed', data)
+        campaign = Campaign.objects.get(id=data['campaign'])
+        images = request.FILES.getlist('attachments')
+        for image in images:
+            photo = Attachment.objects.create(
+                image=image,
+                campaign=campaign
+            )
+        return redirect(reverse('project.list.all.campaign'))
+
+
+
