@@ -6,8 +6,6 @@ from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from decimal import Decimal
 from django.contrib.auth import authenticate, login
-
-
 from django.db.models import Sum, Count,Avg
 from django.views.generic import ListView ,DetailView
 from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,PasswordConfirmationForm,CreateReplyForm,CreateCommentReportForm
@@ -244,8 +242,20 @@ class CreateDonation(CreateView):
 
 
 
+def home(request):
+    return render(request, 'project/home.html')
 
 
+def profile(request):
+    user_id = request.user.id
+    user_donation = Donation.objects.filter(user_id=user_id)
+    user_campaign = Campaign.objects.filter(user_id=user_id)
+    return render(request, template_name='project/profile.html', 
+    context = {
+    'user_donation': user_donation,
+    'user_campaign': user_campaign})
+
+####
 def home(request):
     featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
     latest = Campaign.objects.all().order_by('-created_at')[:5]
