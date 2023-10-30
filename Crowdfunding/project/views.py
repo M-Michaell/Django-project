@@ -1,23 +1,28 @@
-from django.core.exceptions import ValidationError
-from django.shortcuts import render ,redirect
-from django.template import loader
-from django.urls import reverse_lazy ,reverse
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from decimal import Decimal
-from django.contrib.auth import authenticate, login
-from django.db.models import Sum, Count,Avg
-from django.views.generic import ListView ,DetailView
-from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,PasswordConfirmationForm,CreateReplyForm,CreateCommentReportForm
-from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
-from django.contrib.auth.models import  User
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum, Count, Avg
+from django.views.generic import ListView, DetailView
+from project.form import (
+    CreateCampaignForm,
+    CreateCategoryForm,
+    CreateDonationForm,
+    CreateCommentForm,
+    CreateRatingForm,
+    CreateReportForm,
+    PasswordConfirmationForm,
+    CreateReplyForm,
+    CreateCommentReportForm,
+)
+from project.models import Campaign, Category, Comment, Rate, Donation
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from account.models import CustomUser
 from django.contrib.messages import add_message, constants as messages
-
-
+from django.views.generic.edit import FormView
+from project.form import UploadForm
+from project.models import Attachment
 
 # Create your views here.
 class ListAllCampaign(ListView):
@@ -296,9 +301,7 @@ class CategoryDetailView(DetailView):
             return context
 
 #test image-------------------------------------------------------------------
-from django.views.generic.edit import FormView
-from project.form import UploadForm
-from project.models import Attachment
+
 
 class UploadView(FormView):
     template_name = 'project/create.html'

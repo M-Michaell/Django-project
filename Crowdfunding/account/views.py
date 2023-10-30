@@ -1,29 +1,28 @@
+
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-
-
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.views import PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView,PasswordResetView
-
+from django.contrib.auth.views import (
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
+    LoginView,
+    LogoutView,
+)
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.views import LoginView,LogoutView
-
 from django.utils.decorators import method_decorator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.utils import timezone
-
 from django.core.mail import EmailMessage
-from django.core.mail import EmailMultiAlternatives
-
 from account.models import CustomUser
 from account.tokens import account_activation_token
-from account.forms import MyUserCreationForm, MyAuthenticationForm,CustomEditAccountForm, DeleteForm
-
+from account.forms import MyUserCreationForm, MyAuthenticationForm, CustomEditAccountForm, DeleteForm
 
 
 
