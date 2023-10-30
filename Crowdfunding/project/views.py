@@ -1,23 +1,28 @@
-from django.core.exceptions import ValidationError
-from django.shortcuts import render ,redirect
-from django.template import loader
-from django.urls import reverse_lazy ,reverse
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from decimal import Decimal
-from django.contrib.auth import authenticate, login
-from django.db.models import Sum, Count,Avg
-from django.views.generic import ListView ,DetailView
-from project.form import CreateCampaignForm, CreateCategoryForm ,CreateDonationForm,CreateCommentForm,CreateRatingForm, CreateReportForm,PasswordConfirmationForm,CreateReplyForm,CreateCommentReportForm
-from project.models import Campaign, Category,Comment,Reply,Rate,Report,Donation,Comment_Report
-from django.contrib.auth.models import  User
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum, Count, Avg
+from django.views.generic import ListView, DetailView
+from project.form import (
+    CreateCampaignForm,
+    CreateCategoryForm,
+    CreateDonationForm,
+    CreateCommentForm,
+    CreateRatingForm,
+    CreateReportForm,
+    PasswordConfirmationForm,
+    CreateReplyForm,
+    CreateCommentReportForm,
+)
+from project.models import Campaign, Category, Comment, Rate, Donation
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from account.models import CustomUser
 from django.contrib.messages import add_message, constants as messages
-
-
+from django.views.generic.edit import FormView
+from project.form import UploadForm
+from project.models import Attachment
 
 # Create your views here.
 class ListAllCampaign(ListView):
@@ -128,7 +133,9 @@ def campaign_details(request, campaign_id):
     if request.method == 'POST':
         if 'comment_submit' in request.POST:
             comment_form = CreateCommentForm(request.POST)
+            print(comment_form)
             if comment_form.is_valid():
+                print("1111111111111111111111111111")
                 comment = comment_form.save(commit=False)
                 comment.campaign = campaign
                 comment.user = request.user
@@ -172,13 +179,11 @@ def campaign_details(request, campaign_id):
                 add_message(request, messages.SUCCESS, "Your comment report has been successfully submitted.")
                 return redirect('campaign.details', campaign_id=campaign_id)
             
-        elif 'reply' in request.POST:
+        elif 'submit_reply' in request.POST:
             add_reply=CreateReplyForm(request.POST)
-            comment_id = request.POST['comment_id']  
-            print(comment_id)
+            comment_id = request.POST['comment_id'] 
             if add_reply.is_valid():
                 reply = add_reply.save(commit=False)
-                print(reply)
                 reply.comment = Comment.objects.get(id=comment_id)
                 reply.user = request.user
                 reply.save()
@@ -206,10 +211,8 @@ def campaign_details(request, campaign_id):
         elif 'cancel' in request.POST:
             password_form = PasswordConfirmationForm(request.POST)
             entered_password = request.POST.get('password', '')
-            user = request.user  # Get the current user
-
+            user = request.user 
             if user.check_password(entered_password):
-                # Password matches, delete the campaign
                 campaign.delete()
                 return redirect(reverse("project.home"))
             else:
@@ -298,9 +301,7 @@ class CategoryDetailView(DetailView):
             return context
 
 #test image-------------------------------------------------------------------
-from django.views.generic.edit import FormView
-from project.form import UploadForm
-from project.models import Attachment
+
 
 class UploadView(FormView):
     template_name = 'project/create.html'
@@ -323,7 +324,7 @@ class UploadView(FormView):
 
 
 
-
+@login_required(login_url='/account/login/') 
 def profile(request):
     user_id = request.user.id
     user_donation = Donation.objects.filter(user_id=user_id)

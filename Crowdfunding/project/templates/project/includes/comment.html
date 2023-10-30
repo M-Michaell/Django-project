@@ -30,9 +30,9 @@
             </div>
             <form action="" method="POST" class="mx-3 form-control border-0">
               {% csrf_token %}
-              {{ add_reply }}
+              {{ add_reply.reply }}
               <input type="hidden" name="comment_id" class="form-control" value="{{ comment.id }}">
-              <button type="submit" name="reply" class="btn btn-dark shadow-none text-center mt-2">
+              <button type="submit" name="submit_reply" class="btn btn-dark shadow-none text-center mt-2">
                 Comment
               </button>
             </form>
@@ -40,8 +40,9 @@
         </div>
       </div>
 
-      <a class="text-bg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCommentReport{{ comment.id }}"
-        aria-expanded="false" aria-controls="collapseCommentReport{{ comment.id }}">
+      <a class="text-bg text-danger" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapseCommentReport{{ comment.id }}" aria-expanded="false"
+        aria-controls="collapseCommentReport{{ comment.id }}">
         Report this Comment
       </a>
       <div class="collapse" id="collapseCommentReport{{ comment.id }}">
@@ -62,17 +63,13 @@
   {% endfor %}
 
 
-
-
-
-
   <div>
     <form method="post">
 
       {% csrf_token %}
       {{ comment_form.as_p }}
 
-      <button type="submit" name='comment_submit' class="btn btn-dark">Submit</button>
+      <button type="submit" name='comment_submit' class="btn btn-dark mb-3">Submit</button>
     </form>
   </div>
 </div>
