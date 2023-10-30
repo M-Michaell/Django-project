@@ -21,10 +21,8 @@ urlpatterns = [
     path('profile/', profile, name="project.profile"),
     path('<int:pk>/delete', login_required(DeleteCampaign.as_view()), name="project.deleteCampaign"),
     path('<int:pk>/edit', login_required(EditCampaign.as_view()), name="project.editCampaign"),
-
-
-
-    path('upload/', login_required(UploadView.as_view()), name="project.upload")
+    path('list_all/', ListAllCampaign.as_view(), name="project.list.all.campaign"),
+    path('upload/', login_required(UploadView.as_view()), name="project.upload"),
 
 ]
 

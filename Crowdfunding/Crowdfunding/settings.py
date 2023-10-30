@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'taggit',
     'account.apps.AccountConfig',
-    # 'social_django',
+    'fontawesomefree',
 ]
 
 MIDDLEWARE = [
