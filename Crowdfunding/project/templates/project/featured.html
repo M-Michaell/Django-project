@@ -1,23 +1,24 @@
 {% extends 'project/layouts/base.html' %}
 
-{% block title %} Projects in {{ category.name }} Category {% endblock %}
+{% block title %} Featured Campaign {% endblock %}
 
 {% block body %}
 
 <style>
   .fixed-height-card {
-      height: 300px;
+    height: 300px;
   }
+
   .fixed-height-card img {
-          height: 300px;
-      }
+    height: 300px;
+  }
 </style>
 
 
-<h1 class="text-center mt-5">Projects in {{ category.name }} Category</h1>
+<h1 class="text-center mt-5"> Featured Campaign</h1>
 <div class="container mt-5">
   <div class="row row-cols-3 justify-content-center">
-    {% for camp in campaigns %}
+    {% for camp in featured %}
     <div class="col mb-5">
       <a href="{% if user.is_authenticated %}
                 {{ camp.get_details }}
@@ -40,8 +41,8 @@
             L.E raised of {{camp.total_target}}
           </p>
         </div>
-        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
-          aria-valuemin="0" aria-valuemax="100">
+        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0"
+          aria-valuemax="100">
           <div class="progress-bar" style="width: {{camp.get_progress}}% "></div>
         </div>
       </div>
@@ -56,10 +57,10 @@
     </div>
   </div>
 </div>
-  {% endfor %}
+{% endfor %}
 </div>
 <div class="text-center mt-5">
-  <a href="{% url 'project.home' %}" class="btn btn-primary">Back to Home</a>
+  <a href="{% url 'project.home' %}" class="btn btn-success">Back to Home</a>
 </div>
 </div>
 {% endblock %}

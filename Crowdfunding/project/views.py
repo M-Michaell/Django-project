@@ -271,6 +271,7 @@ def home(request):
 
 def featured(request):
     featured = Campaign.objects.filter(featured=True).order_by('-created_at')[:5]
+    print(featured)
     return render(request, 'project/featured.html', context = {"featured": featured})
 
 def latest(request):
