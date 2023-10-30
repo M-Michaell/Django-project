@@ -71,7 +71,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 # 'social_django.context_processors.backends',
-                'Crowdfunding.context_processors.show_category'
+                'Crowdfunding.context_processors.show_category',
 
             ],
         },
@@ -172,7 +172,7 @@ CSRF_FAILURE_VIEW = 'account.views.csrf_failure_redirect'
 #     'django.contrib.auth.backends.ModelBackend',
 # ]
 # LOGIN_URL = 'account/login'
-LOGIN_URL = 'craete_campaign/account/login'
+LOGIN_URL = 'account/login'
 
 LOGIN_REDIRECT_URL = 'project/home'
 LOGOUT_URL = 'account/logout'

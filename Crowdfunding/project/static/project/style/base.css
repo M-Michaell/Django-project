@@ -65,3 +65,11 @@ footer {
   .footer-basic .list-inline{
     color: white;
   }
+
+  .fixed-height-card {
+    height: 300px;
+  }
+
+  .fixed-height-card img {
+    height: 300px;
+  }

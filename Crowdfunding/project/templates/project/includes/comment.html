@@ -30,9 +30,9 @@
             </div>
             <form action="" method="POST" class="mx-3 form-control border-0">
               {% csrf_token %}
-              {{ add_reply }}
+              {{ add_reply.reply }}
               <input type="hidden" name="comment_id" class="form-control" value="{{ comment.id }}">
-              <button type="submit" name="reply" class="btn btn-dark shadow-none text-center mt-2">
+              <button type="submit" name="submit_reply" class="btn btn-dark shadow-none text-center mt-2">
                 Comment
               </button>
             </form>
@@ -60,10 +60,6 @@
 
   </div>
   {% endfor %}
-
-
-
-
 
 
   <div>

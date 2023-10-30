@@ -130,7 +130,9 @@ def campaign_details(request, campaign_id):
     if request.method == 'POST':
         if 'comment_submit' in request.POST:
             comment_form = CreateCommentForm(request.POST)
+            print(comment_form)
             if comment_form.is_valid():
+                print("1111111111111111111111111111")
                 comment = comment_form.save(commit=False)
                 comment.campaign = campaign
                 comment.user = request.user
@@ -174,13 +176,11 @@ def campaign_details(request, campaign_id):
                 add_message(request, messages.SUCCESS, "Your comment report has been successfully submitted.")
                 return redirect('campaign.details', campaign_id=campaign_id)
             
-        elif 'reply' in request.POST:
+        elif 'submit_reply' in request.POST:
             add_reply=CreateReplyForm(request.POST)
-            comment_id = request.POST['comment_id']  
-            print(comment_id)
+            comment_id = request.POST['comment_id'] 
             if add_reply.is_valid():
                 reply = add_reply.save(commit=False)
-                print(reply)
                 reply.comment = Comment.objects.get(id=comment_id)
                 reply.user = request.user
                 reply.save()
@@ -208,10 +208,8 @@ def campaign_details(request, campaign_id):
         elif 'cancel' in request.POST:
             password_form = PasswordConfirmationForm(request.POST)
             entered_password = request.POST.get('password', '')
-            user = request.user  # Get the current user
-
+            user = request.user 
             if user.check_password(entered_password):
-                # Password matches, delete the campaign
                 campaign.delete()
                 return redirect(reverse("project.home"))
             else:
@@ -313,7 +311,7 @@ class UploadView(FormView):
 
 
 
-
+@login_required(login_url='/account/login/') 
 def profile(request):
     user_id = request.user.id
     user_donation = Donation.objects.filter(user_id=user_id)
