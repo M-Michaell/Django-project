@@ -6,10 +6,11 @@ Profile {% endblock %}
 
 <style>
   .fixed-height-card {
-  height: 300px;
-}
-.fixed-height-card img {
-      height: 300px;
+    height: 300px;
+  }
+
+  .fixed-height-card img {
+    height: 300px;
   }
 </style>
 
@@ -17,13 +18,13 @@ Profile {% endblock %}
   <div class="justify-content-around d-flex" style="width: 95%;">
     <div class="" style="align-items: center; text-align: center;">
       <div class="p-5 m-4 rounded-3 grid gap-5 justify-content-around w-100 text-white"
-        style="background-color:rgb(245, 245, 245); ">
+        style="background-color: rgb(39, 142, 73); ">
         <img src="{{user.get_image_url}}" alt="" style="border-radius: 100px; height: 150px; width: 150px;">
         <h1 class="mt-3">{{user.username}}</h1>
         <h5> {{user.email}}</h5>
         <div style="margin: 0;">
-          <div class="bg-body-tertiary mt-5" style="text-align: start; background-color: transparent;">
-            <a href="{% url 'account.edit' %}" class="text-decoration-none text-black ms-3"><i
+          <div class="mt-5" style="text-align: start;background-color: rgb(39, 142, 73)">
+            <a href="{% url 'account.edit' %}  " class="text-decoration-none text-black ms-3"><i
                 class="fa-solid fa-user-pen me-2"></i>Edit Profile</a> <br>
             <hr style="color: black;">
             <a href="{% url 'project.createCampaign' %}" class="text-decoration-none text-black ms-3"><i

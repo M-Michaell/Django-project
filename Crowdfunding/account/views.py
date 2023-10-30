@@ -7,7 +7,6 @@ from django.template.loader import render_to_string
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView,PasswordResetView
 
-from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
@@ -64,7 +63,6 @@ class CustomRegistrationView(CreateView):
 
         self.extra_context = {'email': to_email}
         
-        messages.success(self.request, 'Account data created successfully.')
         return super().form_valid(form)
     
 def activate(request, uidb64, token):
@@ -134,7 +132,6 @@ class CustomEditAccountView(UpdateView):
             self.object.image = form.cleaned_data['image']
             self.object.save()
 
-        messages.success(self.request, 'Account data updated successfully.')
         return super().form_valid(form)
     
     def get_object(self, queryset=None):

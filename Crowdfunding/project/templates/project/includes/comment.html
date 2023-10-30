@@ -40,8 +40,9 @@
         </div>
       </div>
 
-      <a class="text-bg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCommentReport{{ comment.id }}"
-        aria-expanded="false" aria-controls="collapseCommentReport{{ comment.id }}">
+      <a class="text-bg text-danger" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapseCommentReport{{ comment.id }}" aria-expanded="false"
+        aria-controls="collapseCommentReport{{ comment.id }}">
         Report this Comment
       </a>
       <div class="collapse" id="collapseCommentReport{{ comment.id }}">
@@ -68,7 +69,7 @@
       {% csrf_token %}
       {{ comment_form.as_p }}
 
-      <button type="submit" name='comment_submit' class="btn btn-dark">Submit</button>
+      <button type="submit" name='comment_submit' class="btn btn-dark mb-3">Submit</button>
     </form>
   </div>
 </div>

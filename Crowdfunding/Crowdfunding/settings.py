@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'taggit',
     'account.apps.AccountConfig',
-    'fontawesomefree',
+
 ]
 
 MIDDLEWARE = [
@@ -181,4 +181,3 @@ LOGOUT_REDIRECT_URL = 'account/login'
 # SOCIAL_AUTH_FACEBOOK_SECRET = "894d1b20f149706bbcf1ad05c4587ee9"
 # SOCIAL_AUTH_FACEBOOK_SCOPE = [
 #     'email',
-# ]

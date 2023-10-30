@@ -2,7 +2,7 @@
 {% load static %}
 {% block body %}
 <h1 class="text-center m-5"><strong>All Campaigns</strong></h1>
-    <div class="row row-cols-2 g-4 m-2">
+    <div class="row row-cols-2 g-4 m-2 justify-content-center">
     {% for camp in campaigns %}
        <div class="col-3 m-4">
           <a href="{% if user.is_authenticated %}
