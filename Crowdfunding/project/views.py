@@ -36,7 +36,6 @@ class CreateCampaign(CreateView):
     form_class = CreateCampaignForm
     success_url = reverse_lazy('project.upload')
 
-
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
@@ -312,12 +311,12 @@ class UploadView(FormView):
     def post(self, request):
         data = request.POST
         print('mohmmed', data)
-        campaign = Campaign.objects.get(id=data['campaign'])
+        last_campaign = Campaign.objects.latest('id')
         images = request.FILES.getlist('attachments')
         for image in images:
             photo = Attachment.objects.create(
                 image=image,
-                campaign=campaign
+                campaign=last_campaign
             )
         return redirect(reverse('project.list.all.campaign'))
 

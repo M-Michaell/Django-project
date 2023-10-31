@@ -73,13 +73,6 @@ class CreateReportForm(forms.ModelForm):
             'report':forms.Select(attrs={'class': 'form-control'})
         }
 
-    # def clean_report_comment(self):
-    #     data = self.cleaned_data['report_comment']
-
-    #     if not data.is_valid():
-    #         raise forms.ValidationError("Invalid data")
-    #     return data
-
 
 class CreateCommentForm(forms.ModelForm):
     class Meta:
@@ -128,6 +121,5 @@ from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
 
 
 class UploadForm(forms.Form):
-    campaign = forms.ModelChoiceField(queryset=Campaign.objects.all())
     attachments = MultiImageField(min_num=1, max_num=3, max_file_size=1024 * 1024 * 5)
 

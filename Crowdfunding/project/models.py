@@ -24,7 +24,7 @@ class Campaign(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     featured = models.BooleanField()
-    image = models.ImageField(upload_to='project/images/', null=True, blank=True)
+    image = models.ImageField(upload_to='project/images/')
     tags = TaggableManager()
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None,related_name="campaign")
     start_date = models.DateField()

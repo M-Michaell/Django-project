@@ -23,7 +23,8 @@ from django.core.mail import EmailMessage
 from account.models import CustomUser
 from account.tokens import account_activation_token
 from account.forms import MyUserCreationForm, MyAuthenticationForm, CustomEditAccountForm, DeleteForm
-
+from django.http import Http404
+from django.contrib.auth.forms import PasswordResetForm
 
 
 
@@ -181,10 +182,6 @@ class CustomDeleteAccountView(DeleteView):
 
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy('account.login') 
-
-
-from django.http import Http404
-from django.contrib.auth.forms import PasswordResetForm
 
 
 class CustomPasswordResetView(PasswordResetView):
