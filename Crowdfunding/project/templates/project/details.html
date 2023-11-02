@@ -100,7 +100,7 @@
           {%endfor%}
         </div>
 
-        {% if request.user.id == campaign.user.id %}
+        {% if request.user.id == campaign.user.id or user.is_staff %}
         <hr>
 
         <div class="d-flex ">
