@@ -69,13 +69,6 @@ class Campaign(models.Model):
         return cls.objects.all()
 
 
-# class Image(models.Model):
-#     image = models.ImageField(upload_to='project/images/', null=True, blank=True)
-#     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
-#
-#     def get_image_url(self):
-#         return f'/media/{self.image}'
-
 class Donation (models.Model):
     donation = models.DecimalField(max_digits=10,
                                     decimal_places=2 ,
@@ -167,5 +160,8 @@ class Attachment(models.Model):
     image = models.ImageField(upload_to='project/images',null=False, blank=False)
     campaign = models.ForeignKey(Campaign, default=None, on_delete=models.CASCADE, related_name="images")
 
+
+    def __str__(self):
+        return f'{self.campaign.title}'
     def get_image_url(self):
         return f'/media/{self.image}'

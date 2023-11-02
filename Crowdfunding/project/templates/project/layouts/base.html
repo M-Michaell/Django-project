@@ -55,10 +55,12 @@
                   Categories
                 </a>
                 <ul class="dropdown-menu">
+                  {% if user.is_staff %}
                   <li>
                     <a class="dropdown-item" style="color: black;" href="{% url 'project.createCategory' %}">add
                       category</a>
                   </li>
+                  {% endif %}
                   <li>
                     <a class="dropdown-item" style="color: black;" href="{% url 'project.list.all.campaign' %}">All</a>
                   </li>

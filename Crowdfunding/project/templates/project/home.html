@@ -31,16 +31,10 @@ Born To Give{% endblock %} {% block body %}
   <div class="row col-12 m-0">
     <div id="carouselExampleCaptions" class="carousel slide p-0" data-mdb-ride="carousel">
       <div class="carousel-indicators">
-        <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="0" class="active"
-          aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="1"
-          aria-label="Slide 2"></button>
-        <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="2"
-          aria-label="Slide 3"></button>
-        <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="3"
-          aria-label="Slide 4"></button>
-        <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="4"
-          aria-label="Slide 5"></button>
+        {% for campaign in top_rated_campaigns %}
+        <button type="button" data-mdb-target="#carouselExampleCaptions" data-mdb-slide-to="{{ forloop.counter0 }}"
+          {% if forloop.first %}class="active" aria-current="true" aria-label="Slide 1"{% endif %}></button>
+        {% endfor %}
       </div>
       <div class="carousel-inner">
         {% for campaign in top_rated_campaigns %}

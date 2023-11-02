@@ -31,11 +31,13 @@
 
             {{ form.total_target }}
         </div>
+        {% if user.is_staff %}
         <div class="fieldWrapper m-2">
             <label class="text-dark" for="{{ form.featured.id_for_label }}">Featured:</label>
 
             {{ form.featured }}
         </div>
+        {% endif %}
         <div class="fieldWrapper m-2">
             <label class="text-dark" for="{{ form.tags.id_for_label }}">Project tags:</label>
 

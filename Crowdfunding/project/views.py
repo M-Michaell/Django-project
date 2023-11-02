@@ -92,6 +92,7 @@ def campaign_details(request, campaign_id):
         last_donation = Donation.objects.filter(campaign=campaign).last().created_at
     else:
         last_donation="no donations yet"
+
     can_cancel=False
     if campaign.get_progress() < 25:
         can_cancel=True
@@ -134,7 +135,7 @@ def campaign_details(request, campaign_id):
             comment_form = CreateCommentForm(request.POST)
             print(comment_form)
             if comment_form.is_valid():
-                print("1111111111111111111111111111")
+                # print("1111111111111111111111111111")
                 comment = comment_form.save(commit=False)
                 comment.campaign = campaign
                 comment.user = request.user
