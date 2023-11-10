@@ -66,6 +66,8 @@ def getUser(request):
         active_user_id = CustomUser.objects.get(id=request.session['user_id'])
         return active_user_id
 
+
+
 @login_required(login_url='/account/login/') 
 def campaign_details(request, campaign_id):
     try:
